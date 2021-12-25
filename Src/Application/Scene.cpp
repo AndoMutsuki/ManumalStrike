@@ -1,5 +1,4 @@
-#include "main.h"
-#include "Scene.h"
+#include"Application/Headers.h"
 
 void Scene::Draw2D()//ˆê•b‚É‚U‚O‰ñ
 {

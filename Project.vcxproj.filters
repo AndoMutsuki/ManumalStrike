@@ -49,6 +49,12 @@
     <Filter Include="Src\Application\Scene">
       <UniqueIdentifier>{ee30b3f7-b4bf-4a08-ac10-1011764eb5f5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\SceneBase">
+      <UniqueIdentifier>{8d3f8dc0-2582-409c-94b9-9a90b494ab40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\SceneBase\BattleScene">
+      <UniqueIdentifier>{5e3701e0-3307-4fec-ade3-2e3247614c14}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -144,6 +150,12 @@
     <ClInclude Include="Src\Application\Scene.h">
       <Filter>Src\Application\Scene</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\SceneBase\BattleScene\BattleScene.h">
+      <Filter>Src\Application\SceneBase\BattleScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Headers.h">
+      <Filter>Src\Application</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -208,6 +220,9 @@
     </ClCompile>
     <ClCompile Include="Src\Application\Scene.cpp">
       <Filter>Src\Application\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\SceneBase\BattleScene\BattleScene.cpp">
+      <Filter>Src\Application\SceneBase\BattleScene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
