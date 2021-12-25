@@ -9,7 +9,7 @@ void Scene::Draw2D()//ˆê•b‚É‚U‚O‰ñ
 
 void Scene::Update()//ˆê•b‚É‚U‚O‰ñ
 {
-	
+	int a;
 
 }
 
