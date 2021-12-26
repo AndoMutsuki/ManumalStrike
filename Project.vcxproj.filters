@@ -55,6 +55,9 @@
     <Filter Include="Src\Application\SceneBase\BattleScene">
       <UniqueIdentifier>{5e3701e0-3307-4fec-ade3-2e3247614c14}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\UniqueLibrary">
+      <UniqueIdentifier>{ef4e11d3-7f5c-415a-a148-a546381fad31}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">

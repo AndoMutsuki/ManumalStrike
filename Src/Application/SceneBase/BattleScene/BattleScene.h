@@ -14,7 +14,7 @@ public:
 
 private:
 
-	Math::Vector3 mMmat1;
-	Math::Vector3 mMmat2;
+	Math::Matrix m_mat1;
+	Math::Matrix m_mat2;
 
 };

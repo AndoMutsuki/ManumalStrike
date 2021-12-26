@@ -2,6 +2,8 @@
 
 BattleScene::BattleScene()
 {
+	m_mat1 = Math::Matrix::Identity;
+	m_mat2 = Math::Matrix::Identity;
 }
 
 BattleScene::~BattleScene()
