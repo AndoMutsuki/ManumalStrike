@@ -20,9 +20,13 @@ private:
 
 	const bool CalculateHitWall(Math::Vector2& _pos, float& _ang);	//壁に当たっているか、また当たった後の計算
 
+	void CalculateReflectorAng();	//反射板の角度の計算
+
 	float m_scale;
 	float m_ang1;
 	float m_power1;
+
+	float m_reflectorAng;	//反射板の角度
 
 	Math::Matrix m_mat1;
 	Math::Matrix m_mat2;

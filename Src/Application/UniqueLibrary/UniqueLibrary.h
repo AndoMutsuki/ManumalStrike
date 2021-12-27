@@ -19,6 +19,9 @@ public:
 	//オブジェクトにぶつかっていたら、折り返した角度をもとめる
 	void CalculateHitAng(float& _standardAng, const float& _objectAng);
 
+	//角度が浅すぎたときのための調節
+	void AdjustmentHitAng(float& _standardAng);
+
 	//任意のベクトルが(0,0,1)のベクトルに対して何度の方向に向いているかを返す
 	const float GetVecAng(const Math::Vector3& _vec);
 

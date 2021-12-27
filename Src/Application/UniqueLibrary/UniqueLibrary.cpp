@@ -28,6 +28,29 @@ void UniqueLibrary::CalculateHitAng(float& _standardAng, const float& _objectAng
 	}
 }
 
+void UniqueLibrary::AdjustmentHitAng(float& _standardAng)
+{
+	if (_standardAng >= 80 && _standardAng <= 90)
+	{
+		_standardAng = 80.0f;
+	}
+
+	if (_standardAng > 90 && _standardAng <= 100)
+	{
+		_standardAng = 100.0f;
+	}
+
+	if (_standardAng >= 260 && _standardAng < 270)
+	{
+		_standardAng = 260.0f;
+	}
+
+	if (_standardAng >= 270 && _standardAng <= 280)
+	{
+		_standardAng = 280.0f;
+	}
+}
+
 const float UniqueLibrary::GetVecAng(const Math::Vector3& _vec)
 {
 	Math::Vector3 vec = _vec;

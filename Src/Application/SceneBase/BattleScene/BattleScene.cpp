@@ -5,8 +5,10 @@ using namespace ManumalStrikeNamespace;
 BattleScene::BattleScene()
 {
 	m_scale = 40.0f;
-	m_ang1 = -30.0f;
-	m_power1 = 10.0f;
+	m_ang1 = 0.0f;
+	m_power1 = 20.0f;
+
+	m_reflectorAng = 90;
 
 	m_mat1 = Math::Matrix::Identity;
 	m_mat2 = Math::Matrix::Identity;
@@ -30,8 +32,12 @@ BattleScene::~BattleScene()
 
 void BattleScene::Update()
 {
+	CalculateReflectorAng();
+
 	CalculateManumlPos(m_pos1, m_moveVec1, m_ang1, m_power1);
 	m_mat1 = DirectX::XMMatrixTranslation(m_pos1.x, m_pos1.y, 0);
+
+	SCENE.SetGUIVariable(m_reflectorAng);
 }
 
 void BattleScene::Draw2D()
@@ -70,6 +76,7 @@ const bool BattleScene::CalculateHitWall(Math::Vector2& _pos, float& _ang)
 
 		UNIQUELIBRARY.CalculateHitPos(_pos.x, (float)m_width);
 		UNIQUELIBRARY.CalculateHitAng(_ang, 0);
+		UNIQUELIBRARY.AdjustmentHitAng(_ang);
 	}
 
 	if (m_height < abs(_pos.y)) 
@@ -77,8 +84,41 @@ const bool BattleScene::CalculateHitWall(Math::Vector2& _pos, float& _ang)
 		hitWallFlg = true;
 
 		UNIQUELIBRARY.CalculateHitPos(_pos.y, (float)m_height);
-		UNIQUELIBRARY.CalculateHitAng(_ang, 90);
+
+		if (_pos.y < 0)
+		{
+			UNIQUELIBRARY.CalculateHitAng(_ang, m_reflectorAng);	//”½ŽË”Â‚Ì”½ŽË
+			UNIQUELIBRARY.AdjustmentHitAng(_ang);
+		}
+		else
+		{
+			UNIQUELIBRARY.CalculateHitAng(_ang, 90);
+			UNIQUELIBRARY.AdjustmentHitAng(_ang);
+		}
 	}
 
 	return hitWallFlg;
+}
+
+void BattleScene::CalculateReflectorAng()
+{
+	if (GetAsyncKeyState(VK_UP) & 0x8000)
+	{
+		m_reflectorAng += 1.0f;
+		//m_reflectorAng = std::max(m_reflectorAng, 135.0f);
+		if (m_reflectorAng >= 135)
+		{
+			m_reflectorAng = 135.0f;
+		}
+	}
+
+	if (GetAsyncKeyState(VK_DOWN) & 0x8000)
+	{
+		m_reflectorAng -= 1.0f;
+		//m_reflectorAng = std::min(m_reflectorAng, 45.0f);
+		if (m_reflectorAng <= 45)
+		{
+			m_reflectorAng = 45.0f;
+		}
+	}
 }
