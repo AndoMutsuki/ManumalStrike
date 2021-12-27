@@ -2,9 +2,6 @@
 
 class Scene
 {
-private:
-
-
 public:
 
 	// ‰Šúİ’è
@@ -22,6 +19,12 @@ public:
 	// GUIˆ—
 	void ImGuiUpdate();
 
+	static Scene& GetInstance()
+	{
+		static Scene instance;
+		return instance;
+	}
+
 private:
 
 	//”Ä—ps—ñ
@@ -32,12 +35,8 @@ private:
 
 	Scene() {}
 
-public:
-	static Scene& GetInstance()
-	{
-		static Scene instance;
-		return instance;
-	}
+	SceneBase* m_sceneBase;
+
 };
 
 #define SCENE Scene::GetInstance()

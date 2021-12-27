@@ -159,6 +159,15 @@
     <ClInclude Include="Src\Application\Headers.h">
       <Filter>Src\Application</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\UniqueLibrary\UniqueLibrary.h">
+      <Filter>Src\Application\UniqueLibrary</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\SceneBase\SceneBase.h">
+      <Filter>Src\Application\SceneBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\ManumalStrikeNamespace.h">
+      <Filter>Src\Application</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -226,6 +235,12 @@
     </ClCompile>
     <ClCompile Include="Src\Application\SceneBase\BattleScene\BattleScene.cpp">
       <Filter>Src\Application\SceneBase\BattleScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\UniqueLibrary\UniqueLibrary.cpp">
+      <Filter>Src\Application\UniqueLibrary</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\SceneBase\SceneBase.cpp">
+      <Filter>Src\Application\SceneBase</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

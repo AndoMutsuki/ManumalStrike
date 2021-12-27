@@ -1,6 +1,4 @@
-#include "main.h"
-
-#include "Scene.h"
+#include"Application/Headers.h"
 
 //===================================================================
 // ƒƒCƒ“
