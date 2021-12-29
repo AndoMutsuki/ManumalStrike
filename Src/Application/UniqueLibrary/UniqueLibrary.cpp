@@ -1,54 +1,34 @@
 #include"Application/Headers.h"
 
+void UniqueLibrary::Draw2D(const Math::Matrix& _mat, const KdTexture* _texture, const int _width, const int _height)
+{
+	Math::Rectangle rec = { 0,0,_width,_height };
+	SHADER.m_spriteShader.SetMatrix(_mat);
+	SHADER.m_spriteShader.DrawTex(_texture, rec);
+}
+
 void UniqueLibrary::Draw2D(const Math::Matrix& _mat, const KdTexture* _texture, const Math::Rectangle* _rec, const Math::Color* _color, int _x, int _y, const Math::Vector2& _pivot)
 {
 	SHADER.m_spriteShader.SetMatrix(_mat);
 	SHADER.m_spriteShader.DrawTex(_texture, _x, _y, _rec, _color, _pivot);
 }
 
-void UniqueLibrary::CalculateHitPos(float& _standardPos, const float& _objectPos)
+float UniqueLibrary::AdjustmentUpperLimit(float _value, float _valueMax)
 {
-	if (_standardPos >= 0)
+	if (_value >= _valueMax)
 	{
-		_standardPos += abs(_objectPos) - abs(_standardPos);
+		return _valueMax;
 	}
-	else
-	{
-		_standardPos -= abs(_objectPos) - abs(_standardPos);
-	}
+	return _value;
 }
 
-void UniqueLibrary::CalculateHitAng(float& _standardAng, const float& _objectAng)
+float UniqueLibrary::AdjustmentLowerLimit(float _value, float _valueMin)
 {
-	_standardAng = 360 - _standardAng + (2 * _objectAng);
-
-	while (_standardAng > 360)
+	if (_value <= _valueMin)
 	{
-		_standardAng -= 360;
+		return _valueMin;
 	}
-}
-
-void UniqueLibrary::AdjustmentHitAng(float& _standardAng)
-{
-	if (_standardAng >= 80 && _standardAng <= 90)
-	{
-		_standardAng = 80.0f;
-	}
-
-	if (_standardAng > 90 && _standardAng <= 100)
-	{
-		_standardAng = 100.0f;
-	}
-
-	if (_standardAng >= 260 && _standardAng < 270)
-	{
-		_standardAng = 260.0f;
-	}
-
-	if (_standardAng >= 270 && _standardAng <= 280)
-	{
-		_standardAng = 280.0f;
-	}
+	return _value;
 }
 
 const float UniqueLibrary::GetVecAng(const Math::Vector3& _vec)

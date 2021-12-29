@@ -14,19 +14,42 @@ public:
 
 private:
 
-	void CalculateManumlPos(Math::Vector2& _pos, Math::Vector2& _vec, float& _ang, float& _power);	//マニュマルの場所の計算
+	//マニュマルの場所の計算
+	void CalculateManumlPos(Math::Vector2& _pos, Math::Vector2& _vec, float& _ang, float& _power, const float& _scale);	
 
-	void CalculateManumalMoveVec(Math::Vector2& _vec, const float _ang);	//移動するベクトルの向きの計算
+	//移動するベクトルの向きの計算
+	void CalculateManumalMoveVec(Math::Vector2& _vec, const float _ang);	
 
-	const bool CalculateHitWall(Math::Vector2& _pos, float& _ang);	//壁に当たっているか、また当たった後の計算
+	//壁に当たっているか、また当たった後の計算
+	const bool CalculateHitWall(Math::Vector2& _pos, float& _ang, const float& _scale);	
 
-	void CalculateReflectorAng();	//反射板の角度の計算
+	//反射板に当たっているか、また当たった後の計算
+	const bool CalculateHitReflector(Math::Vector2& _pos, float& _ang, const float& _scale);	
+
+	//反射板の下に当たっているか、また当たった後の計算
+	const bool CalculateHitReflectorUnder(Math::Vector2& _pos, float& _ang, const float& _scale);
+
+	//反射板の位置の計算
+	void CalculateReflectorPos();	
+
+	//反射板の角度の計算
+	void CalculateReflectorAng();	
+
+	//反射板の行列の計算
+	void CalculateReflectorMatrix();	
+
+	//オブジェクトにぶつかっていたら、折り返した位置をもとめる
+	void CalculateHitPos(float& _standardPos, const float& _objectPos);	
+
+	//オブジェクトにぶつかっていたら、折り返した角度をもとめる
+	void CalculateHitAng(float& _standardAng, const float& _objectAng);	
+
+	//角度が浅すぎたときのための調節
+	void AdjustmentHitAng(float& _standardAng);
 
 	float m_scale;
 	float m_ang1;
 	float m_power1;
-
-	float m_reflectorAng;	//反射板の角度
 
 	Math::Matrix m_mat1;
 	Math::Matrix m_mat2;
@@ -38,6 +61,17 @@ private:
 	Math::Rectangle m_rec1;
 	Math::Color m_color1;
 
+	bool m_testFlg = true;
+
+	//反射板
+	const float m_moveSpeed = 15.0f;
+	const float m_angSpeed = 1.0f;
+	float m_reflectorScale;
+	float m_reflectorAng;
+	Math::Vector2 m_reflectorPos;
+	Math::Matrix m_reflectorMat;
+
 	KdTexture* m_tex = nullptr;
+	KdTexture* m_reflectorTex = nullptr;
 
 };

@@ -21,6 +21,7 @@ public:
 
 	//GUI‚Å•\¦‚³‚¹‚é•Ï”‚ğ‚Æ‚Á‚Ä‚­‚é
 	void SetGUIVariable(const float _ang);
+	void SetGUIFlg(const int _flg);
 
 	static Scene& GetInstance()
 	{
@@ -42,6 +43,7 @@ private:
 
 	//GUI•\¦—p‚Ì•Ï”
 	float m_ang;
+	int m_flg;
 
 };
 

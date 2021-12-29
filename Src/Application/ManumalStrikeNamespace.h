@@ -3,6 +3,9 @@
 namespace ManumalStrikeNamespace
 {
 	//‰æ–Ê‚Ì‘å‚«‚³
-	static const int m_width = 640;
-	static const int m_height = 360;
+	static const int Width = 640;
+	static const int Height = 360;
+
+	//”½Ë”Â‚ÌyÀ•W
+	static const int ReflectorPosY = 280;
 }

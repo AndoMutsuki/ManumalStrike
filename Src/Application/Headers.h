@@ -2,8 +2,9 @@
 
 #include "main.h"
 
-//ライブラリ
+//全クラス共有
 #include"UniqueLibrary/UniqueLibrary.h"
+#include"TextureManager/TextureManager.h"
 #include"ManumalStrikeNamespace.h"
 
 //シーン関係
