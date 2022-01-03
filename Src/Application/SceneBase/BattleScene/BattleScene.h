@@ -14,6 +14,14 @@ public:
 
 private:
 
+	//マウスの処理
+	void ProcessMouse();
+
+	//マニュマル発射
+	void FirstShot();
+
+	
+
 	//マニュマルの場所の計算
 	void CalculateManumlPos(Math::Vector2& _pos, Math::Vector2& _vec, float& _ang, float& _power, const float& _scale);	
 
@@ -24,10 +32,7 @@ private:
 	const bool CalculateHitWall(Math::Vector2& _pos, float& _ang, const float& _scale);	
 
 	//反射板に当たっているか、また当たった後の計算
-	const bool CalculateHitReflector(Math::Vector2& _pos, float& _ang, const float& _scale);	
-
-	//反射板の下に当たっているか、また当たった後の計算
-	const bool CalculateHitReflectorUnder(Math::Vector2& _pos, float& _ang, const float& _scale);
+	const bool CalculateHitReflector(Math::Vector2& _pos, float& _ang, const float& _scale);
 
 	//反射板の位置の計算
 	void CalculateReflectorPos();	
@@ -61,7 +66,12 @@ private:
 	Math::Rectangle m_rec1;
 	Math::Color m_color1;
 
-	bool m_testFlg = true;
+	//矢印
+	KdTexture* m_arrowTex;
+	Math::Vector2 m_firstArrowPos;
+	float m_arrowScale;
+	const float m_arrowScaleMax = 20.0f;
+	const float m_arrowScaleMin = 3.0f;
 
 	//反射板
 	const float m_moveSpeed = 15.0f;
@@ -70,8 +80,14 @@ private:
 	float m_reflectorAng;
 	Math::Vector2 m_reflectorPos;
 	Math::Matrix m_reflectorMat;
+	int m_reflectedMoveTime;
+	static const int m_reflectedMoveTimeMax = 10;
 
 	KdTexture* m_tex = nullptr;
 	KdTexture* m_reflectorTex = nullptr;
+
+	//マウス関係
+	POINT m_mousePos;
+	POINT m_baseMousePos;
 
 };

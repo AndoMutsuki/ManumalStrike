@@ -6,12 +6,17 @@ BattleScene::BattleScene()
 {
 	m_scale = 40.0f;
 	m_ang1 = 0.0f;
-	m_power1 = 20.0f;
+	m_power1 = 0;
+
+	m_arrowTex = TEXMANA.GetTex("Data/Texture/BattleScene/arrow.jpg");
+	m_firstArrowPos = Math::Vector2::Zero;
+	m_arrowScale = 0;
 
 	m_reflectorScale = 125.0f;
 	m_reflectorAng = 90;
 	m_reflectorPos = Math::Vector2::Zero;
 	m_reflectorMat = Math::Matrix::Identity;
+	m_reflectedMoveTime = 0;
 
 	m_mat1 = Math::Matrix::Identity;
 	m_mat2 = Math::Matrix::Identity;
@@ -25,6 +30,11 @@ BattleScene::BattleScene()
 
 	m_tex = TEXMANA.GetTex("Data/Texture/Manumal/test.jpg");
 	m_reflectorTex = TEXMANA.GetTex("Data/Texture/BattleScene/reflector.png");
+
+	//マウス
+	m_baseMousePos = { 1280 / 2, 720 / 2 };
+	ScreenToClient(APP.m_window.GetWndHandle(), &m_mousePos);
+	SetCursorPos(m_baseMousePos.x, m_baseMousePos.y);
 }
 
 BattleScene::~BattleScene()
@@ -33,6 +43,9 @@ BattleScene::~BattleScene()
 
 void BattleScene::Update()
 {
+	ProcessMouse();
+	FirstShot();
+
 	CalculateReflectorPos();
 	CalculateReflectorAng();
 	CalculateReflectorMatrix();
@@ -45,7 +58,6 @@ void BattleScene::Draw2D()
 {
 	SHADER.m_spriteShader.Begin();
 
-	if (!m_testFlg)return;
 	Math::Matrix scaleMat = DirectX::XMMatrixScaling(0.1f, 0.1f, 0.1f);
 	m_mat1 = scaleMat * m_mat1;
 	UNIQUELIBRARY.Draw2D(m_mat1, m_tex, &m_rec1, &m_color1);
@@ -55,16 +67,44 @@ void BattleScene::Draw2D()
 	SHADER.m_spriteShader.End();
 }
 
+void BattleScene::ProcessMouse()
+{
+	GetCursorPos(&m_mousePos);
+	ScreenToClient(APP.m_window.GetWndHandle(), &m_mousePos);
+
+	m_mousePos.x -= 640;
+	m_mousePos.y = -m_mousePos.y + 360;
+}
+
+void BattleScene::FirstShot()
+{
+	Math::Vector2 nowMousePos = { (float)m_mousePos.x,(float)m_mousePos.y };
+	if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
+	{
+		float manumalMouseLength = UNIQUELIBRARY.GetVecLength(m_pos1, Math::Vector2{ nowMousePos.x,nowMousePos.y });
+		if (manumalMouseLength < m_scale)
+		{
+			if (m_firstArrowPos == Math::Vector2::Zero)
+			{
+				m_firstArrowPos = Math::Vector2{ nowMousePos.x,nowMousePos.y };
+			}
+		}
+	}
+	else
+	{
+		if (m_firstArrowPos != Math::Vector2::Zero)
+		{
+			m_power1 = UNIQUELIBRARY.GetVecLength(Math::Vector2{ nowMousePos.x,nowMousePos.y }, m_firstArrowPos);
+			m_ang1 = UNIQUELIBRARY.GetVecAng(Math::Vector2{ nowMousePos.x,nowMousePos.y }, m_firstArrowPos);
+		}
+		m_firstArrowPos = Math::Vector2::Zero;
+	}
+}
+
 void BattleScene::CalculateManumlPos(Math::Vector2& _pos, Math::Vector2& _vec, float& _ang, float& _power, const float& _scale)
 {
 	//マニュマルが動く処理
 	_pos += _vec * _power;
-
-	//壁で跳ね返る処理
-	if (CalculateHitWall(_pos, _ang, _scale))
-	{
-		CalculateManumalMoveVec(_vec, _ang);
-	}
 
 	//反射板で跳ね返る処理
 	if (CalculateHitReflector(_pos, _ang, _scale))
@@ -72,7 +112,11 @@ void BattleScene::CalculateManumlPos(Math::Vector2& _pos, Math::Vector2& _vec, f
 		CalculateManumalMoveVec(_vec, _ang);
 	}
 
-	CalculateHitReflectorUnder(_pos, _ang, _scale);
+	//壁で跳ね返る処理
+	if (CalculateHitWall(_pos, _ang, _scale))
+	{
+		CalculateManumalMoveVec(_vec, _ang);
+	}
 }
 
 void BattleScene::CalculateManumalMoveVec(Math::Vector2& _vec, const float _ang)
@@ -108,62 +152,47 @@ const bool BattleScene::CalculateHitWall(Math::Vector2& _pos, float& _ang, const
 const bool BattleScene::CalculateHitReflector(Math::Vector2& _pos, float& _ang, const float& _scale)
 {
 	//反射板より明らかに上にある場合は早期リターン
-	if (_pos.y > -150)return false;	
+	if (_pos.y > -150) return false;
 
 	//x座標が反射板に当たっているか
 	float relativePos = _pos.x - m_reflectorPos.x;	//マニュマルの相対的な位置
 	float cosO = cos(DirectX::XMConvertToRadians(m_reflectorAng + 90));
-	if (abs(relativePos) - abs(m_reflectorScale * cosO - _scale) > 0)return false;
+	bool hitReflectorX = abs(relativePos) - abs(m_reflectorScale * cosO) > _scale;
+	if (hitReflectorX) return false;
 
 	//y座標が反射板に当たっているか
 	float tanO = tan(DirectX::XMConvertToRadians(m_reflectorAng + 90));
-	if (_pos.y - (-ReflectorPosY + (relativePos * tanO) + _scale) > 0)return false;
+	bool hitReflectorY = abs(abs(_pos.y) - abs(-ReflectorPosY + (relativePos * tanO))) > _scale;
+	if (hitReflectorY) return false;
 
+	//反射の計算
+	bool hitReflectorTopFlg = _pos.y > (-ReflectorPosY + (relativePos * tanO));
+	if (hitReflectorTopFlg)
 	{
-		//反射の計算
 		CalculateHitPos(_pos.y, (-ReflectorPosY + (relativePos * tanO) + _scale));
 		CalculateHitAng(_ang, m_reflectorAng);
 		AdjustmentHitAng(_ang);
 	}
-
-	return true;
-}
-
-const bool BattleScene::CalculateHitReflectorUnder(Math::Vector2& _pos, float& _ang, const float& _scale)
-{
-	//反射板より明らかに上にある場合は早期リターン
-	if (_pos.y > -150)return false;
-
-	float relativePos = _pos.x - m_reflectorPos.x;	//マニュマルの相対的な位置
-	float cosO = cos(DirectX::XMConvertToRadians(m_reflectorAng + 90));
-	float tanO = tan(DirectX::XMConvertToRadians(m_reflectorAng + 90));
-
-	//反射板の下から当たっているか
+	else
 	{
-		bool collisionX;	//x座標が反射板の下に当たっているか
-		bool collisionY;	//y座標が反射板の下に当たっているか
+		CalculateHitPos(_pos.y, (-ReflectorPosY + (relativePos * tanO) - _scale));
+		CalculateHitAng(_ang, m_reflectorAng + 90);
+		AdjustmentHitAng(_ang);
 
-		collisionX = (abs(relativePos) - abs(m_reflectorScale * cosO - _scale) > 0);
-		if (relativePos > 0)
+		if (m_reflectorAng > 90)
 		{
-			collisionY = (_pos.y - (-ReflectorPosY + (m_reflectorScale * tanO) + _scale)) < 0;
-			if (collisionX && collisionY)
-			{
-				m_testFlg = false;
-			}
-			return true;
+			_ang = UNIQUELIBRARY.AdjustmentLowerLimit(_ang, 200.0f);
+			CalculateHitPos(_pos.x, (m_reflectorScale * cosO  - m_reflectorPos.x - _scale));
 		}
 		else
 		{
-			collisionY = (_pos.y - (-ReflectorPosY + (-m_reflectorScale * tanO) + _scale)) < 0;
-			if (collisionX && collisionY)
-			{
-				m_testFlg = false;
-			}
-			return true;
+			_ang = UNIQUELIBRARY.AdjustmentUpperLimit(_ang, 160.0f);
+			CalculateHitPos(_pos.x, (m_reflectorScale * cosO + m_reflectorPos.x - _scale));
 		}
 	}
-	return false;
+	m_reflectedMoveTime = 0;
+
+	return true;
 }
 
 void BattleScene::CalculateReflectorPos()

@@ -17,13 +17,18 @@ public:
 	void Draw2D(const Math::Matrix& _mat, const KdTexture* _texture, const Math::Rectangle* _rec, const Math::Color* _color, int _x = 0, int _y = 0, const Math::Vector2& _pivot = { 0.5f, 0.5f });
 
 	//値の上限を超えないようにする
-	float AdjustmentUpperLimit(float _value, float _valueMax);
+	template<typename T>
+	T AdjustmentUpperLimit(T _value, T _valueMax);
 
 	//値の加減を超えないようにする
-	float AdjustmentLowerLimit(float _value, float _valueMin);
+	template<typename T>
+	T AdjustmentLowerLimit(T _value, T _valueMin);
 
-	//任意のベクトルが(0,0,1)のベクトルに対して何度の方向に向いているかを返す
-	const float GetVecAng(const Math::Vector3& _vec);
+	//二点の座標の長さを求める
+	const float GetVecLength(const Math::Vector2& _pos1, const Math::Vector2& _pos2);
+
+	//二点間のベクトルの絶対的な角度
+	const float GetVecAng(const Math::Vector2& _pos1, const Math::Vector2& _pos2);
 
 private:
 
@@ -32,3 +37,23 @@ private:
 };
 
 #define UNIQUELIBRARY UniqueLibrary::GetInstance()
+
+template<typename T>
+inline T UniqueLibrary::AdjustmentUpperLimit(T _value, T _valueMax)
+{
+	if (_value >= _valueMax)
+	{
+		return _valueMax;
+	}
+	return _value;
+}
+
+template<typename T>
+inline T UniqueLibrary::AdjustmentLowerLimit(T _value, T _valueMin)
+{
+	if (_value <= _valueMin)
+	{
+		return _valueMin;
+	}
+	return _value;
+}

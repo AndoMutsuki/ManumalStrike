@@ -13,31 +13,19 @@ void UniqueLibrary::Draw2D(const Math::Matrix& _mat, const KdTexture* _texture, 
 	SHADER.m_spriteShader.DrawTex(_texture, _x, _y, _rec, _color, _pivot);
 }
 
-float UniqueLibrary::AdjustmentUpperLimit(float _value, float _valueMax)
+const float UniqueLibrary::GetVecLength(const Math::Vector2& _pos1, const Math::Vector2& _pos2)
 {
-	if (_value >= _valueMax)
-	{
-		return _valueMax;
-	}
-	return _value;
+	Math::Vector2 lengthVec = _pos1 - _pos2;
+	float length = lengthVec.Length();
+	return length;
 }
 
-float UniqueLibrary::AdjustmentLowerLimit(float _value, float _valueMin)
+const float UniqueLibrary::GetVecAng(const Math::Vector2& _pos1, const Math::Vector2& _pos2)
 {
-	if (_value <= _valueMin)
-	{
-		return _valueMin;
-	}
-	return _value;
-}
-
-const float UniqueLibrary::GetVecAng(const Math::Vector3& _vec)
-{
-	Math::Vector3 vec = _vec;
-	vec.z = 0;
+	Math::Vector2 vec = _pos1 - _pos2;
 	vec.Normalize();
 
-	Math::Vector3 dot = DirectX::XMVector3Dot(vec, { 0,0,1 });
+	Math::Vector2 dot = DirectX::XMVector2Dot(vec, { 0,1 });
 	if (dot.x > 1)
 		dot.x = 1;
 	if (dot.x < -1)
