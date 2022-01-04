@@ -1,10 +1,10 @@
 #include"Application/Headers.h"
 
-void UniqueLibrary::Draw2D(const Math::Matrix& _mat, const KdTexture* _texture, const int _width, const int _height)
+void UniqueLibrary::Draw2D(const Math::Matrix& _mat, const KdTexture* _texture, const int _width, const int _height, const float _alpha)
 {
 	Math::Rectangle rec = { 0,0,_width,_height };
 	SHADER.m_spriteShader.SetMatrix(_mat);
-	SHADER.m_spriteShader.DrawTex(_texture, rec);
+	SHADER.m_spriteShader.DrawTex(_texture, rec, _alpha);
 }
 
 void UniqueLibrary::Draw2D(const Math::Matrix& _mat, const KdTexture* _texture, const Math::Rectangle* _rec, const Math::Color* _color, int _x, int _y, const Math::Vector2& _pivot)

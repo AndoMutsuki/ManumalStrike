@@ -11,7 +11,7 @@ public:
 	}
 
 	//Draw‚ğŠÈ’P‚É‚Ü‚Æ‚ß‚½‚à‚Ì
-	void Draw2D(const Math::Matrix& _mat, const KdTexture* _texture, const int _width, const int _height);
+	void Draw2D(const Math::Matrix& _mat, const KdTexture* _texture, const int _width, const int _height, const float _alpha);
 
 	//Draw‚ğŠÈ’P‚É‚Ü‚Æ‚ß‚½‚à‚ÌAÚ×İ’è”Å
 	void Draw2D(const Math::Matrix& _mat, const KdTexture* _texture, const Math::Rectangle* _rec, const Math::Color* _color, int _x = 0, int _y = 0, const Math::Vector2& _pivot = { 0.5f, 0.5f });
