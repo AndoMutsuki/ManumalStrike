@@ -4,6 +4,8 @@ using namespace ManumalStrikeNamespace;
 
 BattleScene::BattleScene()
 {
+	m_reflectorProcess = new ReflectorProcess;
+
 	m_scale = 40.0f;
 	m_ang1 = 0.0f;
 	m_power1 = 0;
@@ -21,9 +23,9 @@ BattleScene::BattleScene()
 	m_arrowMat = Math::Matrix::Identity;
 	m_arrowScale = 0;
 
-	m_reflectorScale = 125.0f;
-	m_reflectorAng = 90;
-	m_reflectorPos = Math::Vector2::Zero;
+	m_reflectorLength = m_reflectorProcess->GetLength();
+	m_reflectorAng = m_reflectorProcess->GetAng();
+	m_reflectorPos = m_reflectorProcess->GetPos();
 	m_reflectorMat = Math::Matrix::Identity;
 
 	m_mat1 = Math::Matrix::Identity;
@@ -45,6 +47,10 @@ BattleScene::BattleScene()
 	m_tex = TEXMANA.GetTex("Data/Texture/Manumal/test.jpg");
 	m_reflectorTex = TEXMANA.GetTex("Data/Texture/BattleScene/reflector.png");
 
+	effect = Effekseer::Effect::Create(EFFEKSEER.m_manager, uR"(Data/Effect/test.efk)");
+	handle = 0;
+	m_time = 0;
+
 	//マウス
 	m_baseMousePos = { 1280 / 2, 720 / 2 };
 	ScreenToClient(APP.m_window.GetWndHandle(), &m_mousePos);
@@ -53,6 +59,7 @@ BattleScene::BattleScene()
 
 BattleScene::~BattleScene()
 {
+	delete m_reflectorProcess;
 }
 
 void BattleScene::Update()
@@ -60,9 +67,7 @@ void BattleScene::Update()
 	ProcessMouse();
 	FirstShot();
 
-	CalculateReflectorPos();
-	CalculateReflectorAng();
-	CalculateReflectorMatrix();
+	m_reflectorProcess->Update(m_arrowFlg);
 
 	ManumalMutualCollision();
 	ManumalEnemyCollision();
@@ -87,13 +92,54 @@ void BattleScene::Draw2D()
 	m_mat3 = scaleMat * m_mat3;
 	UNIQUELIBRARY.Draw2D(m_mat3, m_tex, &m_rec1, &m_color1);
 
-	UNIQUELIBRARY.Draw2D(m_reflectorMat, m_reflectorTex, 250, 20, 1.0f);
+	//UNIQUELIBRARY.Draw2D(m_reflectorMat, m_reflectorTex, 250, 20, 1.0f);
+	m_reflectorProcess->Draw();
 
 	bool arrowMinOverFlg = m_arrowScale != 0;
 	if (m_arrowFlg && arrowMinOverFlg)
 	{
 		UNIQUELIBRARY.Draw2D(m_arrowMat, m_arrowTex, 200, 1000, 0.8f);
 	}
+
+	if (m_time % 120 == 0)
+	{
+		// Play an effect
+		// エフェクトの再生
+		handle = EFFEKSEER.m_manager->Play(effect, 0, 0, 0);
+	}
+
+	if (m_time % 120 == 119)
+	{
+		// Stop effects
+		// エフェクトの停止
+		EFFEKSEER.m_manager->StopEffect(handle);
+	}
+
+	// Move the effect
+	// エフェクトの移動
+	EFFEKSEER.m_manager->AddLocation(handle, ::Effekseer::Vector3D(0.2f, 0.0f, 0.0f));
+
+	// Update the manager
+	// マネージャーの更新
+	EFFEKSEER.m_manager->Update();
+
+	// Update a time
+	// 時間を更新する
+	EFFEKSEER.m_renderer->SetTime(m_time / 60.0f);
+
+	// Begin to rendering effects
+	// エフェクトの描画開始処理を行う。
+	EFFEKSEER.m_renderer->BeginRendering();
+
+	// Render effects
+	// エフェクトの描画を行う。
+	EFFEKSEER.m_manager->Draw();
+
+	// Finish to rendering effects
+	// エフェクトの描画終了処理を行う。
+	EFFEKSEER.m_renderer->EndRendering();
+
+	m_time++;
 
 	SHADER.m_spriteShader.End();
 }
@@ -189,7 +235,6 @@ const bool BattleScene::CalculateHitWall(Math::Vector2& _pos, float& _ang, const
 
 		CalculateHitPos(_pos.x, (float)(Width - _scale));
 		CalculateHitAng(_ang, 0);
-		AdjustmentHitAng(_ang);
 	}
 
 	if (Height - _scale < abs(_pos.y))
@@ -198,7 +243,6 @@ const bool BattleScene::CalculateHitWall(Math::Vector2& _pos, float& _ang, const
 
 		CalculateHitPos(_pos.y, (float)(Height - _scale));
 		CalculateHitAng(_ang, 90);
-		AdjustmentHitAng(_ang);
 	}
 
 	return hitWallFlg;
@@ -210,13 +254,13 @@ const bool BattleScene::CalculateHitReflector(Math::Vector2& _pos, float& _ang, 
 	if (_pos.y > -150) return false;
 
 	//x座標が反射板に当たっているか
-	float relativePos = _pos.x - m_reflectorPos.x;	//マニュマルの相対的な位置
-	float cosO = cos(DirectX::XMConvertToRadians(m_reflectorAng + 90));
-	bool hitReflectorX = abs(relativePos) - abs(m_reflectorScale * cosO) > _scale;
+	float relativePos = _pos.x - m_reflectorProcess->GetPos().x;	//マニュマルの相対的な位置
+	float cosO = cos(DirectX::XMConvertToRadians(m_reflectorProcess->GetAng() + 90));
+	bool hitReflectorX = abs(relativePos) - abs(m_reflectorProcess->GetLength() * cosO) > _scale;
 	if (hitReflectorX) return false;
 
 	//y座標が反射板に当たっているか
-	float tanO = tan(DirectX::XMConvertToRadians(m_reflectorAng + 90));
+	float tanO = tan(DirectX::XMConvertToRadians(m_reflectorProcess->GetAng() + 90));
 	bool hitReflectorY = abs(abs(_pos.y) - abs(-ReflectorPosY + (relativePos * tanO))) > _scale;
 	if (hitReflectorY) return false;
 
@@ -225,81 +269,39 @@ const bool BattleScene::CalculateHitReflector(Math::Vector2& _pos, float& _ang, 
 	if (hitReflectorTopFlg)
 	{
 		CalculateHitPos(_pos.y, (-ReflectorPosY + (relativePos * tanO) + _scale));
-		CalculateHitAng(_ang, m_reflectorAng);
-		AdjustmentHitAng(_ang);
+		CalculateHitAng(_ang, m_reflectorProcess->GetAng());
 	}
 	else
 	{
 		CalculateHitPos(_pos.y, (-ReflectorPosY + (relativePos * tanO) - _scale));
-		CalculateHitAng(_ang, m_reflectorAng + 90);
-		AdjustmentHitAng(_ang);
+		CalculateHitAng(_ang, m_reflectorProcess->GetAng() + 90);
 
-		if (m_reflectorAng > 90)
+		if (m_reflectorProcess->GetAng() > 90)
 		{
 			_ang = UNIQUELIBRARY.AdjustmentLowerLimit(_ang, 200.0f);
-			CalculateHitPos(_pos.x, (m_reflectorScale * cosO  - m_reflectorPos.x - _scale));
+			CalculateHitPos(_pos.x, (m_reflectorProcess->GetLength() * cosO  - m_reflectorProcess->GetPos().x - _scale));
 		}
-		else if (m_reflectorAng < 90)
+		else if (m_reflectorProcess->GetAng() < 90)
 		{
 			_ang = UNIQUELIBRARY.AdjustmentUpperLimit(_ang, 160.0f);
-			CalculateHitPos(_pos.x, (m_reflectorScale * cosO + m_reflectorPos.x - _scale));
+			CalculateHitPos(_pos.x, (m_reflectorProcess->GetLength() * cosO + m_reflectorProcess->GetPos().x - _scale));
 		}
 		else
 		{
-			if (_pos.x > m_reflectorPos.x)
+			if (_pos.x > m_reflectorProcess->GetPos().x)
 			{
 				_ang = UNIQUELIBRARY.AdjustmentLowerLimit(_ang, 200.0f);
-				CalculateHitPos(_pos.x, (m_reflectorScale * cosO - m_reflectorPos.x - _scale));
+				CalculateHitPos(_pos.x, (m_reflectorProcess->GetLength() * cosO - m_reflectorProcess->GetPos().x - _scale));
 			}
 			else
 			{
 				_ang = UNIQUELIBRARY.AdjustmentUpperLimit(_ang, 160.0f);
-				CalculateHitPos(_pos.x, (m_reflectorScale * cosO + m_reflectorPos.x - _scale));
+				CalculateHitPos(_pos.x, (m_reflectorProcess->GetLength() * cosO + m_reflectorProcess->GetPos().x - _scale));
 			}
 		}
 	}
 
 	return true;
-}
-
-void BattleScene::CalculateReflectorPos()
-{
-	if (GetAsyncKeyState('D') & 0x8000)
-	{
-		m_reflectorPos.x += m_moveSpeed;
-		m_reflectorPos.x = UNIQUELIBRARY.AdjustmentUpperLimit(m_reflectorPos.x, Width - m_reflectorScale);
-	}
-
-	if (GetAsyncKeyState('A') & 0x8000)
-	{
-		m_reflectorPos.x -= m_moveSpeed;
-		m_reflectorPos.x = UNIQUELIBRARY.AdjustmentLowerLimit(m_reflectorPos.x, -Width + m_reflectorScale);
-	}
-}
-
-void BattleScene::CalculateReflectorAng()
-{
-	if (m_arrowFlg)return;
-
-	if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
-	{
-		m_reflectorAng += m_angSpeed;
-		m_reflectorAng = UNIQUELIBRARY.AdjustmentUpperLimit(m_reflectorAng, 120.0f);
-	}
-
-	if (GetAsyncKeyState(VK_RBUTTON) & 0x8000)
-	{
-		m_reflectorAng -= m_angSpeed;
-		m_reflectorAng = UNIQUELIBRARY.AdjustmentLowerLimit(m_reflectorAng, 60.0f);
-	}
-}
-
-void BattleScene::CalculateReflectorMatrix()
-{
-	m_reflectorPos.y = -ReflectorPosY;
-	m_reflectorMat = DirectX::XMMatrixTranslation(m_reflectorPos.x, m_reflectorPos.y, 0);
-	Math::Matrix rotMat = DirectX::XMMatrixRotationZ(DirectX::XMConvertToRadians(m_reflectorAng + 90.0f));
-	m_reflectorMat = rotMat * m_reflectorMat;
 }
 
 void BattleScene::CalculateHitPos(float& _standardPos, const float& _objectPos)
@@ -321,29 +323,6 @@ void BattleScene::CalculateHitAng(float& _standardAng, const float& _objectAng)
 	while (_standardAng > 360)
 	{
 		_standardAng -= 360;
-	}
-}
-
-void BattleScene::AdjustmentHitAng(float& _standardAng)
-{
-	if (_standardAng >= 70 && _standardAng <= 90)
-	{
-		_standardAng = 70.0f;
-	}
-
-	if (_standardAng > 90 && _standardAng <= 110)
-	{
-		_standardAng = 110.0f;
-	}
-
-	if (_standardAng >= 250 && _standardAng < 270)
-	{
-		_standardAng = 250.0f;
-	}
-
-	if (_standardAng >= 270 && _standardAng <= 290)
-	{
-		_standardAng = 290.0f;
 	}
 }
 

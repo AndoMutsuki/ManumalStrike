@@ -60,7 +60,7 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <InlineFunctionExpansion>Default</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>.\;src;..\Library;..\Library\DirectXTK\Inc;..\Library\DirectXTex\DirectXTex;..\Library\tinygltf;..\Library\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\;src;..\Library;..\Library\DirectXTK\Inc;..\Library\DirectXTex\DirectXTex;..\Library\tinygltf;..\Library\imgui;C:\Users\Mutya\EffekseerRuntime162a\install_msvc2019\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>false</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -86,6 +86,7 @@
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\Library\DirectXTK\Lib\$(Configuration);..\Library\DirectXTex\DirectXTex\Lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>C:\Users\Mutya\EffekseerRuntime162a\install_msvc2019\lib\Effekseerd.lib;C:\Users\Mutya\EffekseerRuntime162a\install_msvc2019\lib\EffekseerRendererDX11d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <FxCompile>
       <ShaderType>
@@ -107,7 +108,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
-      <AdditionalIncludeDirectories>.\;src;..\Library;..\Library\DirectXTK\Inc;..\Library\DirectXTex\DirectXTex;..\Library\tinygltf;..\Library\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\;src;..\Library;..\Library\DirectXTK\Inc;..\Library\DirectXTex\DirectXTex;..\Library\tinygltf;..\Library\imgui;C:\Users\Mutya\EffekseerRuntime162a\install_msvc2019\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -131,6 +132,7 @@
       <TargetMachine>MachineX86</TargetMachine>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <AdditionalLibraryDirectories>..\Library\DirectXTK\Lib\$(Configuration);..\Library\DirectXTex\DirectXTex\Lib\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>C:\Users\Mutya\EffekseerRuntime162a\install_msvc2019\lib\Effekseer.lib;C:\Users\Mutya\EffekseerRuntime162a\install_msvc2019\lib\EffekseerRendererDX11.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <FxCompile>
       <ShaderType>
@@ -159,6 +161,10 @@
     <ClInclude Include="..\Library\tinygltf\stb_image.h" />
     <ClInclude Include="..\Library\tinygltf\stb_image_write.h" />
     <ClInclude Include="..\Library\tinygltf\tiny_gltf.h" />
+    <ClInclude Include="Src\Application\BattleProcess\ReflectorProcess\ReflectorProcess.h" />
+    <ClInclude Include="Src\Application\EffectManager\EffectManager.h" />
+    <ClInclude Include="Src\Application\Enemy\EnemyBase.h" />
+    <ClInclude Include="Src\Application\Enemy\Morumon.h" />
     <ClInclude Include="Src\Application\Headers.h" />
     <ClInclude Include="Src\Application\ManumalStrikeNamespace.h" />
     <ClInclude Include="Src\Application\Scene.h" />
@@ -190,6 +196,10 @@
     <ClCompile Include="..\Library\imgui\imgui_impl_dx11.cpp" />
     <ClCompile Include="..\Library\imgui\imgui_impl_win32.cpp" />
     <ClCompile Include="..\Library\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="Src\Application\BattleProcess\ReflectorProcess\ReflectorProcess.cpp" />
+    <ClCompile Include="Src\Application\EffectManager\EffectManager.cpp" />
+    <ClCompile Include="Src\Application\Enemy\EnemyBase.cpp" />
+    <ClCompile Include="Src\Application\Enemy\Morumon.cpp" />
     <ClCompile Include="Src\Application\Scene.cpp" />
     <ClCompile Include="Src\Application\main.cpp" />
     <ClCompile Include="Src\Application\SceneBase\BattleScene\BattleScene.cpp" />

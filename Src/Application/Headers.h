@@ -6,6 +6,16 @@
 #include"UniqueLibrary/UniqueLibrary.h"
 #include"TextureManager/TextureManager.h"
 #include"ManumalStrikeNamespace.h"
+#include<Effekseer.h>
+#include<EffekseerRendererDX11.h>
+#include"EffectManager/EffectManager.h"
+
+//ƒoƒgƒ‹‚Ìˆ—
+#include"BattleProcess/ReflectorProcess/ReflectorProcess.h"
+
+//“GŠÖŒW
+#include"Enemy/EnemyBase.h"
+#include"Enemy/Morumon.h"
 
 //ƒV[ƒ“ŠÖŒW
 #include "SceneBase/SceneBase.h"

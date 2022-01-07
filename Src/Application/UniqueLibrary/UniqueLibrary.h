@@ -20,7 +20,7 @@ public:
 	template<typename T>
 	T AdjustmentUpperLimit(T _value, T _valueMax);
 
-	//’l‚Ì‰ÁŒ¸‚ð’´‚¦‚È‚¢‚æ‚¤‚É‚·‚é
+	//’l‚Ì‰ºŒÀ‚ð’´‚¦‚È‚¢‚æ‚¤‚É‚·‚é
 	template<typename T>
 	T AdjustmentLowerLimit(T _value, T _valueMin);
 

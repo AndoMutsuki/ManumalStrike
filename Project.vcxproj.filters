@@ -61,6 +61,24 @@
     <Filter Include="Src\Application\TextureManager">
       <UniqueIdentifier>{d3fc309b-836b-4137-80cb-2bf877d850d5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\Enemy">
+      <UniqueIdentifier>{270832ef-0949-49c3-8974-815e274a90e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\Enemy\EnemyData">
+      <UniqueIdentifier>{bd09483f-6831-49d8-a79e-954a78cb36b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\Enemy\EnemyData\Morumon">
+      <UniqueIdentifier>{e47a289f-286e-46b3-bcee-f6a2441e1174}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\BattleProcess">
+      <UniqueIdentifier>{0013f312-3584-4f8d-8b65-6ca2d9df530d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\BattleProcess\ReflectorProcess">
+      <UniqueIdentifier>{2b70fc28-6677-43a9-927c-415827ea8c9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\EffectManager">
+      <UniqueIdentifier>{bb6a65c3-496a-4d5a-b121-5e3b13fa5c54}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -174,6 +192,18 @@
     <ClInclude Include="Src\Application\TextureManager\TextureManager.h">
       <Filter>Src\Application\TextureManager</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\Enemy\EnemyBase.h">
+      <Filter>Src\Application\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Enemy\Morumon.h">
+      <Filter>Src\Application\Enemy\EnemyData\Morumon</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\BattleProcess\ReflectorProcess\ReflectorProcess.h">
+      <Filter>Src\Application\BattleProcess\ReflectorProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\EffectManager\EffectManager.h">
+      <Filter>Src\Application\EffectManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -250,6 +280,18 @@
     </ClCompile>
     <ClCompile Include="Src\Application\TextureManager\TextureManager.cpp">
       <Filter>Src\Application\TextureManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Enemy\EnemyBase.cpp">
+      <Filter>Src\Application\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Enemy\Morumon.cpp">
+      <Filter>Src\Application\Enemy\EnemyData\Morumon</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\BattleProcess\ReflectorProcess\ReflectorProcess.cpp">
+      <Filter>Src\Application\BattleProcess\ReflectorProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\EffectManager\EffectManager.cpp">
+      <Filter>Src\Application\EffectManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
