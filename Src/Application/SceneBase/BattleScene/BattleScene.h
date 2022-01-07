@@ -46,6 +46,9 @@ private:
 	//マニュマルと敵の当たり判定
 	void ManumalEnemyCollision();
 
+	//エフェクトの描画
+	void EffectDraw();
+
 	float m_scale;
 	float m_ang1;
 	float m_power1;
@@ -90,9 +93,9 @@ private:
 	KdTexture* m_tex = nullptr;
 	KdTexture* m_reflectorTex = nullptr;
 
-	Effekseer::EffectRef effect;
-	Effekseer::Handle handle;
-	int32_t m_time;
+	Effekseer::EffectRef m_effect;
+	Effekseer::Handle m_handle;
+	bool m_effectFlg;
 
 	//マウス関係
 	POINT m_mousePos;

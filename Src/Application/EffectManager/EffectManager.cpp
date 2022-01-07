@@ -2,6 +2,13 @@
 
 EffectManager::~EffectManager()
 {
+    // マネージャーの破棄
+    m_manager.Reset();
+
+    // レンダラーの破棄
+    m_renderer.Reset();
+
+    m_effectList.clear();
 }
 
 void EffectManager::Init()
@@ -45,4 +52,34 @@ void EffectManager::Init()
     // カメラ行列を設定
     m_renderer->SetCameraMatrix(
         ::Effekseer::Matrix44().LookAtRH(g_position, ::Effekseer::Vector3D(0.0f, 0.0f, 0.0f), ::Effekseer::Vector3D(0.0f, 1.0f, 0.0f)));
+}
+
+const EffekseerRendererDX11::RendererRef& EffectManager::GetRenderer() const
+{
+    return m_renderer;
+}
+
+const Effekseer::ManagerRef& EffectManager::GetManager() const
+{
+    return m_manager;
+}
+
+const std::shared_ptr<Effekseer::EffectRef> EffectManager::GetEffect(const char16_t* _fileName)
+{
+    std::shared_ptr<Effekseer::EffectRef> tmpEffect = nullptr;
+
+    if (m_effectList.find((std::string)"_fileName") == m_effectList.end())
+    {
+        //初めて読み込まれていたら
+        tmpEffect = std::make_shared<Effekseer::EffectRef>();
+        *tmpEffect = Effekseer::Effect::Create(EFFEKSEER.GetManager(), _fileName);
+        m_effectList[(std::string)"_fileName"] = tmpEffect;
+    }
+    else
+    {
+        //すでに読み込まれていたら 
+        return m_effectList[(std::string)"_fileName"];
+    }
+
+    return m_effectList[(std::string)"_fileName"];
 }

@@ -47,9 +47,9 @@ BattleScene::BattleScene()
 	m_tex = TEXMANA.GetTex("Data/Texture/Manumal/test.jpg");
 	m_reflectorTex = TEXMANA.GetTex("Data/Texture/BattleScene/reflector.png");
 
-	effect = Effekseer::Effect::Create(EFFEKSEER.m_manager, uR"(Data/Effect/test.efk)");
-	handle = 0;
-	m_time = 0;
+	m_effect = *(EFFEKSEER.GetEffect(uR"(Data/Effect/test.efk)"));
+	m_handle = 0;
+	m_effectFlg = false;
 
 	//マウス
 	m_baseMousePos = { 1280 / 2, 720 / 2 };
@@ -101,45 +101,7 @@ void BattleScene::Draw2D()
 		UNIQUELIBRARY.Draw2D(m_arrowMat, m_arrowTex, 200, 1000, 0.8f);
 	}
 
-	if (m_time % 120 == 0)
-	{
-		// Play an effect
-		// エフェクトの再生
-		handle = EFFEKSEER.m_manager->Play(effect, 0, 0, 0);
-	}
-
-	if (m_time % 120 == 119)
-	{
-		// Stop effects
-		// エフェクトの停止
-		EFFEKSEER.m_manager->StopEffect(handle);
-	}
-
-	// Move the effect
-	// エフェクトの移動
-	EFFEKSEER.m_manager->AddLocation(handle, ::Effekseer::Vector3D(0.2f, 0.0f, 0.0f));
-
-	// Update the manager
-	// マネージャーの更新
-	EFFEKSEER.m_manager->Update();
-
-	// Update a time
-	// 時間を更新する
-	EFFEKSEER.m_renderer->SetTime(m_time / 60.0f);
-
-	// Begin to rendering effects
-	// エフェクトの描画開始処理を行う。
-	EFFEKSEER.m_renderer->BeginRendering();
-
-	// Render effects
-	// エフェクトの描画を行う。
-	EFFEKSEER.m_manager->Draw();
-
-	// Finish to rendering effects
-	// エフェクトの描画終了処理を行う。
-	EFFEKSEER.m_renderer->EndRendering();
-
-	m_time++;
+	EffectDraw();
 
 	SHADER.m_spriteShader.End();
 }
@@ -365,4 +327,32 @@ void BattleScene::ManumalEnemyCollision()
 	}
 
 	CalculateManumalMoveVec(m_moveVec1, m_ang1);
+}
+
+void BattleScene::EffectDraw()
+{
+	if (!m_effectFlg)
+	{
+		// エフェクトの再生
+		m_handle = EFFEKSEER.GetManager()->Play(m_effect, 0, 0, 0);
+		m_effectFlg = true;
+	}
+
+	// エフェクトの移動
+	//EFFEKSEER.GetManager()->AddLocation(m_handle, ::Effekseer::Vector3D(0.2f, 0.0f, 0.0f));
+
+	//EFFEKSEER.GetManager()->SetRotation(m_handle, 0,0,0);
+	//EFFEKSEER.GetManager()->SetRotation(m_handle, {0,1,0}, 270);
+
+	// マネージャーの更新
+	EFFEKSEER.GetManager()->Update();
+
+	// エフェクトの描画開始処理を行う。
+	EFFEKSEER.GetRenderer()->BeginRendering();
+
+	// エフェクトの描画を行う。
+	EFFEKSEER.GetManager()->Draw();
+
+	// エフェクトの描画終了処理を行う。
+	EFFEKSEER.GetRenderer()->EndRendering();
 }

@@ -117,6 +117,9 @@ void Application::Release()
 	ImGui_ImplWin32_Shutdown();
 	ImGui::DestroyContext();
 
+	//エフェクシアの解放
+	EFFEKSEER.~EffectManager();
+
 	// シェーダ解放
 	SHADER.Release();
 
