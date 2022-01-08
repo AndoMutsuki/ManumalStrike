@@ -30,6 +30,12 @@ public:
 	//二点間のベクトルの絶対的な角度
 	const float GetVecAng(const Math::Vector2& _pos1, const Math::Vector2& _pos2);
 
+	//反射した後の位置
+	const float CalculateReflectPos(const float& _standardPos, const float& _objectPos);
+
+	//反射した後の位置
+	const float CalculateReflectAng(const float& _standardAng, const float& _objectAng);
+
 private:
 
 	UniqueLibrary() {}

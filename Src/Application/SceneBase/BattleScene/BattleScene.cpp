@@ -4,7 +4,12 @@ using namespace ManumalStrikeNamespace;
 
 BattleScene::BattleScene()
 {
+	m_mouseProcess = new MouseProcess;
+	m_firstShotProcess = new FirstShotProcess;
 	m_reflectorProcess = new ReflectorProcess;
+	m_manumalList.push_back(new Morumon);
+	m_manumalList.push_back(new Morumon);
+	m_manumalList[1]->SetPos({ 100,0 });
 
 	m_scale = 40.0f;
 	m_ang1 = 0.0f;
@@ -40,7 +45,11 @@ BattleScene::BattleScene()
 	m_moveVec2 = Math::Vector2::Zero;
 	m_moveVec3 = Math::Vector2::Zero;
 
-	CalculateManumalMoveVec(m_moveVec1, m_ang1);
+	for (auto i = m_manumalList.begin(); i != m_manumalList.end(); ++i)
+	{
+		(*i)->CalculateMoveVec();
+	}
+
 	m_rec1 = { 0,0,800,800 };
 	m_color1 = { 1.0f,1.0f,1.0f,1.0f };
 
@@ -64,36 +73,56 @@ BattleScene::~BattleScene()
 
 void BattleScene::Update()
 {
-	ProcessMouse();
-	FirstShot();
+	m_mousePos = m_mouseProcess->Update(m_mousePos);
+
+	m_firstShotProcess->Update(m_manumalList[0]->GetManumalDataKinetic(), m_mousePos);
+	for (auto i = m_manumalList.begin(); i != m_manumalList.end(); ++i)
+	{
+		(*i)->CalculateMoveVec();
+	}
 
 	m_reflectorProcess->Update(m_arrowFlg);
 
 	ManumalMutualCollision();
 	ManumalEnemyCollision();
 
-	CalculateManumlPos(m_pos1, m_moveVec1, m_ang1, m_power1, m_scale);
+	for (auto i = m_manumalList.begin(); i != m_manumalList.end(); ++i)
+	{
+		(*i)->MoveProcess();
+	}
+	CalculateManumlPos(m_manumalList[0]->GetManumalDataKinetic().pos, m_manumalList[0]->GetManumalDataKinetic().moveVec, m_manumalList[0]->GetManumalDataKinetic().ang, m_manumalList[0]->GetManumalDataKinetic().power, m_manumalList[0]->GetManumalDataKinetic().scale);
 	CalculateManumlPos(m_pos2, m_moveVec2, m_ang2, m_power2, m_scale);
 	CalculateManumlPos(m_pos3, m_moveVec3, m_ang3, m_power3, m_scale);
-	m_mat1 = DirectX::XMMatrixTranslation(m_pos1.x, m_pos1.y, 0);
-	m_mat2 = DirectX::XMMatrixTranslation(m_pos2.x, m_pos2.y, 0);
-	m_mat3 = DirectX::XMMatrixTranslation(m_pos3.x, m_pos3.y, 0);
+
+	for (auto i = m_manumalList.begin(); i != m_manumalList.end(); ++i)
+	{
+		(*i)->CalculateMatrix();
+	}
 }
 
 void BattleScene::Draw2D()
 {
 	SHADER.m_spriteShader.Begin();
 
-	Math::Matrix scaleMat = DirectX::XMMatrixScaling(0.1f, 0.1f, 0.1f);
+	/*Math::Matrix scaleMat = DirectX::XMMatrixScaling(0.1f, 0.1f, 0.1f);
 	m_mat1 = scaleMat * m_mat1;
 	UNIQUELIBRARY.Draw2D(m_mat1, m_tex, &m_rec1, &m_color1);
 	m_mat2 = scaleMat * m_mat2;
 	UNIQUELIBRARY.Draw2D(m_mat2, m_tex, &m_rec1, &m_color1);
 	m_mat3 = scaleMat * m_mat3;
-	UNIQUELIBRARY.Draw2D(m_mat3, m_tex, &m_rec1, &m_color1);
+	UNIQUELIBRARY.Draw2D(m_mat3, m_tex, &m_rec1, &m_color1);*/
 
-	//UNIQUELIBRARY.Draw2D(m_reflectorMat, m_reflectorTex, 250, 20, 1.0f);
+	for (auto i = m_manumalList.begin(); i != m_manumalList.end(); ++i)
+	{
+		(*i)->Draw();
+	}
+
 	m_reflectorProcess->Draw();
+
+	if (m_firstShotProcess->GetArrowDrawFlg())
+	{
+		m_firstShotProcess->DrawArrow();
+	}
 
 	bool arrowMinOverFlg = m_arrowScale != 0;
 	if (m_arrowFlg && arrowMinOverFlg)
@@ -106,86 +135,28 @@ void BattleScene::Draw2D()
 	SHADER.m_spriteShader.End();
 }
 
-void BattleScene::ProcessMouse()
-{
-	GetCursorPos(&m_mousePos);
-	ScreenToClient(APP.m_window.GetWndHandle(), &m_mousePos);
-
-	m_mousePos.x -= 640;
-	m_mousePos.y = -m_mousePos.y + 360;
-}
-
-void BattleScene::FirstShot()
-{
-	Math::Vector2 nowMousePos = { (float)m_mousePos.x,(float)m_mousePos.y };
-	m_arrowScale = UNIQUELIBRARY.GetVecLength(Math::Vector2{ nowMousePos.x,nowMousePos.y }, m_firstArrowPos) / 10.0f;
-	if (m_arrowScale < m_arrowScaleMin)
-	{
-		m_arrowScale = 0;
-	}
-	else
-	{
-		m_arrowScale = UNIQUELIBRARY.AdjustmentUpperLimit(m_arrowScale, m_arrowScaleMax) + m_arrowScaleFixed;
-	}
-
-	if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
-	{
-		float manumalMouseLength = UNIQUELIBRARY.GetVecLength(m_pos1, Math::Vector2{ nowMousePos.x,nowMousePos.y });
-		if (manumalMouseLength < m_scale)
-		{
-			if (m_firstArrowPos == Math::Vector2::Zero)
-			{
-				m_arrowFlg = true;
-				m_firstArrowPos = Math::Vector2{ nowMousePos.x,nowMousePos.y };
-			}
-		}
-	}
-	else
-	{
-		if (m_firstArrowPos != Math::Vector2::Zero)
-		{
-			m_arrowFlg = false;
-			m_power1 = m_arrowScale;
-			float arrowAng = UNIQUELIBRARY.GetVecAng(m_firstArrowPos, Math::Vector2{ nowMousePos.x,nowMousePos.y });
-			m_ang1 = -m_arrowAng;
-			CalculateManumalMoveVec(m_moveVec1, m_ang1);
-		}
-		m_firstArrowPos = Math::Vector2::Zero;
-	}
-
-	bool arrowMinOverFlg = m_arrowScale != 0;
-	if (m_arrowFlg && arrowMinOverFlg)
-	{
-		m_arrowAng = UNIQUELIBRARY.GetVecAng(m_firstArrowPos, Math::Vector2{ nowMousePos.x,nowMousePos.y });
-		Math::Matrix scaleMat = DirectX::XMMatrixScaling(1.0f, (m_arrowScale - m_arrowScaleFixed) / m_arrowScaleMax, 0);
-		Math::Matrix rotMat = DirectX::XMMatrixRotationZ(DirectX::XMConvertToRadians(-m_arrowAng ));
-		Math::Matrix transMat = DirectX::XMMatrixTranslation(m_pos1.x, m_pos1.y, 0);
-		m_arrowMat = scaleMat * rotMat * transMat;
-	}
-}
-
 void BattleScene::CalculateManumlPos(Math::Vector2& _pos, Math::Vector2& _vec, float& _ang, float& _power, const float& _scale)
 {
 	//ƒ}ƒjƒ…ƒ}ƒ‹‚ª“®‚­ˆ—
-	_pos += _vec * _power;
+	//_pos += _vec * _power;
 
 	//”½ŽË”Â‚Å’µ‚Ë•Ô‚éˆ—
 	if (CalculateHitReflector(_pos, _ang, _scale))
 	{
-		CalculateManumalMoveVec(_vec, _ang);
+		for (auto i = m_manumalList.begin(); i != m_manumalList.end(); ++i)
+		{
+			(*i)->CalculateMoveVec();
+		}
 	}
 
 	//•Ç‚Å’µ‚Ë•Ô‚éˆ—
 	if (CalculateHitWall(_pos, _ang, _scale))
 	{
-		CalculateManumalMoveVec(_vec, _ang);
+		for (auto i = m_manumalList.begin(); i != m_manumalList.end(); ++i)
+		{
+			(*i)->CalculateMoveVec();
+		}
 	}
-}
-
-void BattleScene::CalculateManumalMoveVec(Math::Vector2& _vec, const float _ang)
-{
-	_vec = DirectX::XMVector2TransformNormal({ 0,1 }, DirectX::XMMatrixRotationZ(DirectX::XMConvertToRadians(_ang)));
-	_vec.Normalize();
 }
 
 const bool BattleScene::CalculateHitWall(Math::Vector2& _pos, float& _ang, const float& _scale)
@@ -297,7 +268,10 @@ void BattleScene::ManumalMutualCollision()
 	m_pos2 = m_pos1 + betweenVec * (m_scale + m_scale);
 	m_ang2 = -UNIQUELIBRARY.GetVecAng(m_pos2, m_pos1);
 	//m_power2 = 50;
-	CalculateManumalMoveVec(m_moveVec2, m_ang2);
+	for (auto i = m_manumalList.begin(); i != m_manumalList.end(); ++i)
+	{
+		(*i)->CalculateMoveVec();
+	}
 }
 
 void BattleScene::ManumalEnemyCollision()
@@ -326,7 +300,10 @@ void BattleScene::ManumalEnemyCollision()
 		CalculateHitAng(m_ang1, 90);
 	}
 
-	CalculateManumalMoveVec(m_moveVec1, m_ang1);
+	for (auto i = m_manumalList.begin(); i != m_manumalList.end(); ++i)
+	{
+		(*i)->CalculateMoveVec();
+	}
 }
 
 void BattleScene::EffectDraw()

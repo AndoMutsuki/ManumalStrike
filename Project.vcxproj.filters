@@ -61,15 +61,6 @@
     <Filter Include="Src\Application\TextureManager">
       <UniqueIdentifier>{d3fc309b-836b-4137-80cb-2bf877d850d5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Application\Enemy">
-      <UniqueIdentifier>{270832ef-0949-49c3-8974-815e274a90e4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Application\Enemy\EnemyData">
-      <UniqueIdentifier>{bd09483f-6831-49d8-a79e-954a78cb36b9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Src\Application\Enemy\EnemyData\Morumon">
-      <UniqueIdentifier>{e47a289f-286e-46b3-bcee-f6a2441e1174}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Src\Application\BattleProcess">
       <UniqueIdentifier>{0013f312-3584-4f8d-8b65-6ca2d9df530d}</UniqueIdentifier>
     </Filter>
@@ -78,6 +69,24 @@
     </Filter>
     <Filter Include="Src\Application\EffectManager">
       <UniqueIdentifier>{bb6a65c3-496a-4d5a-b121-5e3b13fa5c54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\Manumal">
+      <UniqueIdentifier>{fd002c55-f26d-4976-adc9-3a09f41303cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\Manumal\ManumalData">
+      <UniqueIdentifier>{cb461164-21ca-43d8-a144-08b70dd05253}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\Manumal\ManumalData\Morumon">
+      <UniqueIdentifier>{37d42cc4-2679-482b-8ce9-cf06d71cf7c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\MouseProcess">
+      <UniqueIdentifier>{56d41540-2be6-4c33-a976-039400df4d70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\BattleProcess\FirstShotProcess">
+      <UniqueIdentifier>{a5e7ea05-c475-4de0-bc04-a4e05040d3f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\BattleProcess\HitManumalReflectorProcess">
+      <UniqueIdentifier>{fef2d8d9-586c-4630-85cf-0823a9f351cd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -192,17 +201,26 @@
     <ClInclude Include="Src\Application\TextureManager\TextureManager.h">
       <Filter>Src\Application\TextureManager</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Application\Enemy\EnemyBase.h">
-      <Filter>Src\Application\Enemy</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Application\Enemy\Morumon.h">
-      <Filter>Src\Application\Enemy\EnemyData\Morumon</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Application\BattleProcess\ReflectorProcess\ReflectorProcess.h">
       <Filter>Src\Application\BattleProcess\ReflectorProcess</Filter>
     </ClInclude>
     <ClInclude Include="Src\Application\EffectManager\EffectManager.h">
       <Filter>Src\Application\EffectManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Manumal\ManumalBase.h">
+      <Filter>Src\Application\Manumal</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Manumal\Morumon.h">
+      <Filter>Src\Application\Manumal\ManumalData\Morumon</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Mouse\MouseProcess.h">
+      <Filter>Src\Application\MouseProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\BattleProcess\FirstShotProcess\FirstShotProcess.h">
+      <Filter>Src\Application\BattleProcess\FirstShotProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\BattleProcess\HitManumalReflectorProcess\HitManumalReflectorProcess.h">
+      <Filter>Src\Application\BattleProcess\HitManumalReflectorProcess</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -281,17 +299,26 @@
     <ClCompile Include="Src\Application\TextureManager\TextureManager.cpp">
       <Filter>Src\Application\TextureManager</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Application\Enemy\EnemyBase.cpp">
-      <Filter>Src\Application\Enemy</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Application\Enemy\Morumon.cpp">
-      <Filter>Src\Application\Enemy\EnemyData\Morumon</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Application\BattleProcess\ReflectorProcess\ReflectorProcess.cpp">
       <Filter>Src\Application\BattleProcess\ReflectorProcess</Filter>
     </ClCompile>
     <ClCompile Include="Src\Application\EffectManager\EffectManager.cpp">
       <Filter>Src\Application\EffectManager</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Manumal\ManumalBase.cpp">
+      <Filter>Src\Application\Manumal</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Manumal\Morumon.cpp">
+      <Filter>Src\Application\Manumal\ManumalData\Morumon</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Mouse\MouseProcess.cpp">
+      <Filter>Src\Application\MouseProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\BattleProcess\FirstShotProcess\FirstShotProcess.cpp">
+      <Filter>Src\Application\BattleProcess\FirstShotProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\BattleProcess\HitManumalReflectorProcess\HitManumalReflectorProcess.cpp">
+      <Filter>Src\Application\BattleProcess\HitManumalReflectorProcess</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -10,12 +10,17 @@
 #include<EffekseerRendererDX11.h>
 #include"EffectManager/EffectManager.h"
 
+//マウスの制御
+#include"Mouse/MouseProcess.h"
+
 //バトルの処理
+#include"BattleProcess/FirstShotProcess/FirstShotProcess.h"
 #include"BattleProcess/ReflectorProcess/ReflectorProcess.h"
+#include"BattleProcess/HitManumalReflectorProcess/HitManumalReflectorProcess.h"
 
 //敵関係
-#include"Enemy/EnemyBase.h"
-#include"Enemy/Morumon.h"
+#include"Manumal/ManumalBase.h"
+#include"Manumal/Morumon.h"
 
 //シーン関係
 #include "SceneBase/SceneBase.h"

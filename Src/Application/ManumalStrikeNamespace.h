@@ -19,22 +19,31 @@ namespace ManumalStrikeNamespace
 	//友情コンボの種類
 	enum class frendshipCombo
 	{
-		BOUND,			//跳ね返る
-		PENETRATION		//貫通
+		BEAM,			//ビーム
+		EXPLOSION		//爆発
 	};
 
 	//マニュマルの基本情報
 	struct manumalData
 	{
-		int				m_HP;			//ヒットポイント
-		float			m_scale;		//大きさ
-		float			m_attack;		//攻撃力
-		float			m_speed;		//速さ
-		int				m_stamina;		//減速しだすまでの時間
-		enemyHitType	m_enemyHitType;	//敵と当たった時の挙動の種類
-		Math::Vector3	m_pos;			//位置
-		Math::Vector3	m_moveVec;		//進む向き
-		float			m_ang;			//角度
-		float			m_power;		//進む大きさ
+		int				HP;				//ヒットポイント
+		float			scale;			//半径
+		float			attack;			//攻撃力
+		float			speed;			//速さ
+		int				stamina;		//減速しだすまでの時間
+		enemyHitType	enemyHitType;	//敵と当たった時の挙動の種類
+		Math::Vector2	pos;			//位置
+		Math::Vector2	moveVec;		//進む向き
+		float			ang;			//角度
+		float			power;			//進む大きさ
+		Math::Matrix	mat;			//行列
+	};
+
+	//マニュマルの画像情報
+	struct manumalTextureData
+	{
+		KdTexture*			tex;		//画像
+		Math::Rectangle		rec;		//幅、高さなど
+		Math::Color			color;		//色
 	};
 }

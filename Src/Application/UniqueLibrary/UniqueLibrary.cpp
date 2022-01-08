@@ -40,3 +40,31 @@ const float UniqueLibrary::GetVecAng(const Math::Vector2& _pos1, const Math::Vec
 
 	return ang;
 }
+
+const float UniqueLibrary::CalculateReflectPos(const float& _standardPos, const float& _objectPos)
+{
+	float standardPos = _standardPos;
+	if (_standardPos >= 0)
+	{
+		standardPos += abs(_objectPos) - abs(_standardPos);
+	}
+	else
+	{
+		standardPos -= abs(_objectPos) - abs(_standardPos);
+	}
+
+	return standardPos;
+}
+
+const float UniqueLibrary::CalculateReflectAng(const float& _standardAng, const float& _objectAng)
+{
+	float standardAng = _standardAng;
+	standardAng = 360 - _standardAng + (2 * _objectAng);
+
+	while (standardAng > 360)
+	{
+		standardAng -= 360;
+	}
+
+	return standardAng;
+}

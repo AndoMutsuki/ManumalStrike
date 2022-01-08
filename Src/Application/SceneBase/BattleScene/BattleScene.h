@@ -14,19 +14,13 @@ public:
 
 private:
 
-	ReflectorProcess* m_reflectorProcess;
-
-	//マウスの処理
-	void ProcessMouse();
-
-	//マニュマル発射
-	void FirstShot();
+	MouseProcess*				m_mouseProcess;
+	FirstShotProcess*			m_firstShotProcess;
+	ReflectorProcess*			m_reflectorProcess;
+	std::vector<ManumalBase*>	m_manumalList;
 
 	//マニュマルの場所の計算
 	void CalculateManumlPos(Math::Vector2& _pos, Math::Vector2& _vec, float& _ang, float& _power, const float& _scale);	
-
-	//移動するベクトルの向きの計算
-	void CalculateManumalMoveVec(Math::Vector2& _vec, const float _ang);	
 
 	//壁に当たっているか、また当たった後の計算
 	const bool CalculateHitWall(Math::Vector2& _pos, float& _ang, const float& _scale);	
