@@ -17,6 +17,7 @@
 #include"BattleProcess/FirstShotProcess/FirstShotProcess.h"
 #include"BattleProcess/ReflectorProcess/ReflectorProcess.h"
 #include"BattleProcess/HitManumalReflectorProcess/HitManumalReflectorProcess.h"
+#include"BattleProcess/HitManumalwallProcess/HitManumalwallProcess.h"
 
 //“GŠÖŒW
 #include"Manumal/ManumalBase.h"

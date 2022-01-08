@@ -15,7 +15,14 @@ public:
 
 	void DrawArrow()const;
 
+	const bool GetClickFlg();
+
 	const bool GetArrowDrawFlg();
+
+	//矢印の行列を計算するかどうかのフラグ
+	const bool DoCalculateArrowMat();
+
+private:
 
 	//最初のマウスの座標の算出
 	void CalculateFirstMousePos();
@@ -35,13 +42,8 @@ public:
 	//矢印の行列を計算
 	void CalculateArrowMat();
 
-	//矢印の行列を計算するかどうかのフラグ
-	const bool DoCalculateArrowMat();
-
-private:
-
 	KdTexture*		m_arrowTex;					//矢印の画像
-	bool			m_touchingFlg;				//マニュマルをクリックしているかフラグ
+	bool			m_keepManumalFlg;			//マニュマルを一回選んで離すまでのフラグ
 	Math::Vector2	m_firstMousePos;			//最初のマウスの場所
 	Math::Vector2	m_nowMousePos;				//今のマウスの場所
 	float			m_arrowSpeed;				//打ち出させる速度

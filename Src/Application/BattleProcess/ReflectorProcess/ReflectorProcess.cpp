@@ -4,13 +4,12 @@ using namespace ManumalStrikeNamespace;
 
 ReflectorProcess::ReflectorProcess()
 {
-	m_tex = TEXMANA.GetTex("Data/Texture/BattleScene/reflector.png");
-
-	m_length = 125.0f;
-	m_ang = 90.0f;
-	m_pos = Math::Vector2::Zero;
-	m_pos.y = -ReflectorPosY;
-	m_mat = Math::Matrix::Identity;
+	m_tex		= TEXMANA.GetTex("Data/Texture/BattleScene/reflector.png");
+	m_length	= 125.0f;
+	m_ang		= 90.0f;
+	m_pos		= Math::Vector2::Zero;
+	m_pos.y		= -ReflectorPosY;
+	m_mat		= Math::Matrix::Identity;
 }
 
 ReflectorProcess::~ReflectorProcess()
@@ -19,10 +18,12 @@ ReflectorProcess::~ReflectorProcess()
 
 void ReflectorProcess::Update(const bool _shotPrepareFlg)
 {
-	if (_shotPrepareFlg)return;
+	if (_shotPrepareFlg)return;	//最初の打ち出しをしている最中は早期リターン
 
 	CalculatePos();
+
 	CalculateAng();
+
 	CalculateMatrix();
 }
 
@@ -86,14 +87,14 @@ void ReflectorProcess::CalculateAng()
 
 void ReflectorProcess::LeanRight()
 {
-	float m_reflectorAngLimit = 120.0f;
+	float m_reflectorAngLimit = 120.0f;	//反射板の角度の最大値
 	m_ang += m_angSpeed;
 	m_ang = UNIQUELIBRARY.AdjustmentUpperLimit(m_ang, m_reflectorAngLimit);
 }
 
 void ReflectorProcess::LeanLeft()
 {
-	float reflectorAngLower = 60.0f;
+	float reflectorAngLower = 60.0f;	//反射板の角度の最小値
 	m_ang -= m_angSpeed;
 	m_ang = UNIQUELIBRARY.AdjustmentLowerLimit(m_ang, reflectorAngLower);
 }

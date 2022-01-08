@@ -14,22 +14,12 @@ public:
 
 private:
 
-	MouseProcess*				m_mouseProcess;
-	FirstShotProcess*			m_firstShotProcess;
-	ReflectorProcess*			m_reflectorProcess;
+	MouseProcess*				m_mouseProcess = nullptr;
+	FirstShotProcess*			m_firstShotProcess = nullptr;
+	ReflectorProcess*			m_reflectorProcess = nullptr;
+	HitManumalwallProcess*		m_hitManumalwallProcess = nullptr;
+	HitManumalReflectorProcess* m_hitManumalReflectorProcess = nullptr;
 	std::vector<ManumalBase*>	m_manumalList;
-
-	//マニュマルの場所の計算
-	void CalculateManumlPos(Math::Vector2& _pos, Math::Vector2& _vec, float& _ang, float& _power, const float& _scale);	
-
-	//壁に当たっているか、また当たった後の計算
-	const bool CalculateHitWall(Math::Vector2& _pos, float& _ang, const float& _scale);	
-
-	//反射板に当たっているか、また当たった後の計算
-	const bool CalculateHitReflector(Math::Vector2& _pos, float& _ang, const float& _scale);
-
-	//オブジェクトにぶつかっていたら、折り返した位置をもとめる
-	void CalculateHitPos(float& _standardPos, const float& _objectPos);	
 
 	//オブジェクトにぶつかっていたら、折り返した角度をもとめる
 	void CalculateHitAng(float& _standardAng, const float& _objectAng);	

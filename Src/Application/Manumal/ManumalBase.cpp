@@ -12,14 +12,14 @@ ManumalBase::~ManumalBase()
 
 void ManumalBase::Draw()
 {
-	float texMagnification = CalculateTexMagnification();
+	float texMagnification = CalculateTexMagnification();	//‰æ‘œ‚ÌŠg‘å—¦
 	Math::Matrix scaleMat = DirectX::XMMatrixScaling(texMagnification, texMagnification, texMagnification);
 	UNIQUELIBRARY.Draw2D(scaleMat * m_manumalData.mat, m_texData.tex, &m_texData.rec, &m_texData.color);
 }
 
 const float ManumalBase::CalculateTexMagnification()
 {
-	float texMagnification = (float)(m_manumalData.scale * 2) / (float)m_texData.rec.width;
+	float texMagnification = (float)(m_manumalData.scale * 2) / (float)m_texData.rec.width;	//‰æ‘œ‚ÌŠg‘å—¦
 	return texMagnification;
 }
 

@@ -4,9 +4,12 @@ using namespace ManumalStrikeNamespace;
 
 BattleScene::BattleScene()
 {
-	m_mouseProcess = new MouseProcess;
-	m_firstShotProcess = new FirstShotProcess;
-	m_reflectorProcess = new ReflectorProcess;
+	m_mouseProcess					= new MouseProcess;
+	m_firstShotProcess				= new FirstShotProcess;
+	m_reflectorProcess				= new ReflectorProcess;
+	m_hitManumalwallProcess			= new HitManumalwallProcess;
+	m_hitManumalReflectorProcess	= new HitManumalReflectorProcess;
+	m_manumalList.clear();
 	m_manumalList.push_back(new Morumon);
 	m_manumalList.push_back(new Morumon);
 	m_manumalList[1]->SetPos({ 100,0 });
@@ -68,7 +71,11 @@ BattleScene::BattleScene()
 
 BattleScene::~BattleScene()
 {
+	delete m_mouseProcess;
+	delete m_firstShotProcess;
 	delete m_reflectorProcess;
+	delete m_hitManumalReflectorProcess;
+	m_manumalList.clear();
 }
 
 void BattleScene::Update()
@@ -81,7 +88,7 @@ void BattleScene::Update()
 		(*i)->CalculateMoveVec();
 	}
 
-	m_reflectorProcess->Update(m_arrowFlg);
+	m_reflectorProcess->Update(m_firstShotProcess->GetClickFlg());
 
 	ManumalMutualCollision();
 	ManumalEnemyCollision();
@@ -90,9 +97,26 @@ void BattleScene::Update()
 	{
 		(*i)->MoveProcess();
 	}
-	CalculateManumlPos(m_manumalList[0]->GetManumalDataKinetic().pos, m_manumalList[0]->GetManumalDataKinetic().moveVec, m_manumalList[0]->GetManumalDataKinetic().ang, m_manumalList[0]->GetManumalDataKinetic().power, m_manumalList[0]->GetManumalDataKinetic().scale);
-	CalculateManumlPos(m_pos2, m_moveVec2, m_ang2, m_power2, m_scale);
-	CalculateManumlPos(m_pos3, m_moveVec3, m_ang3, m_power3, m_scale);
+
+	//壁で跳ね返る処理
+	m_hitManumalwallProcess->Update(m_manumalList[0]->GetManumalDataKinetic());
+	if (m_hitManumalwallProcess->GetHitWallFlg())
+	{
+		for (auto i = m_manumalList.begin(); i != m_manumalList.end(); ++i)
+		{
+			(*i)->CalculateMoveVec();
+		}
+	}
+
+	//反射板で跳ね返る処理
+	m_hitManumalReflectorProcess->Update(m_manumalList[0]->GetManumalDataKinetic(), m_reflectorProcess);
+	if (m_hitManumalReflectorProcess->GetHitReflectorFlg())
+	{
+		for (auto i = m_manumalList.begin(); i != m_manumalList.end(); ++i)
+		{
+			(*i)->CalculateMoveVec();
+		}
+	}
 
 	for (auto i = m_manumalList.begin(); i != m_manumalList.end(); ++i)
 	{
@@ -133,120 +157,6 @@ void BattleScene::Draw2D()
 	EffectDraw();
 
 	SHADER.m_spriteShader.End();
-}
-
-void BattleScene::CalculateManumlPos(Math::Vector2& _pos, Math::Vector2& _vec, float& _ang, float& _power, const float& _scale)
-{
-	//マニュマルが動く処理
-	//_pos += _vec * _power;
-
-	//反射板で跳ね返る処理
-	if (CalculateHitReflector(_pos, _ang, _scale))
-	{
-		for (auto i = m_manumalList.begin(); i != m_manumalList.end(); ++i)
-		{
-			(*i)->CalculateMoveVec();
-		}
-	}
-
-	//壁で跳ね返る処理
-	if (CalculateHitWall(_pos, _ang, _scale))
-	{
-		for (auto i = m_manumalList.begin(); i != m_manumalList.end(); ++i)
-		{
-			(*i)->CalculateMoveVec();
-		}
-	}
-}
-
-const bool BattleScene::CalculateHitWall(Math::Vector2& _pos, float& _ang, const float& _scale)
-{
-	bool hitWallFlg = false;
-	if (Width - _scale < abs(_pos.x))
-	{
-		hitWallFlg = true;
-
-		CalculateHitPos(_pos.x, (float)(Width - _scale));
-		CalculateHitAng(_ang, 0);
-	}
-
-	if (Height - _scale < abs(_pos.y))
-	{
-		hitWallFlg = true;
-
-		CalculateHitPos(_pos.y, (float)(Height - _scale));
-		CalculateHitAng(_ang, 90);
-	}
-
-	return hitWallFlg;
-}
-
-const bool BattleScene::CalculateHitReflector(Math::Vector2& _pos, float& _ang, const float& _scale)
-{
-	//反射板より明らかに上にある場合は早期リターン
-	if (_pos.y > -150) return false;
-
-	//x座標が反射板に当たっているか
-	float relativePos = _pos.x - m_reflectorProcess->GetPos().x;	//マニュマルの相対的な位置
-	float cosO = cos(DirectX::XMConvertToRadians(m_reflectorProcess->GetAng() + 90));
-	bool hitReflectorX = abs(relativePos) - abs(m_reflectorProcess->GetLength() * cosO) > _scale;
-	if (hitReflectorX) return false;
-
-	//y座標が反射板に当たっているか
-	float tanO = tan(DirectX::XMConvertToRadians(m_reflectorProcess->GetAng() + 90));
-	bool hitReflectorY = abs(abs(_pos.y) - abs(-ReflectorPosY + (relativePos * tanO))) > _scale;
-	if (hitReflectorY) return false;
-
-	//反射の計算
-	bool hitReflectorTopFlg = _pos.y > (-ReflectorPosY + (relativePos * tanO));
-	if (hitReflectorTopFlg)
-	{
-		CalculateHitPos(_pos.y, (-ReflectorPosY + (relativePos * tanO) + _scale));
-		CalculateHitAng(_ang, m_reflectorProcess->GetAng());
-	}
-	else
-	{
-		CalculateHitPos(_pos.y, (-ReflectorPosY + (relativePos * tanO) - _scale));
-		CalculateHitAng(_ang, m_reflectorProcess->GetAng() + 90);
-
-		if (m_reflectorProcess->GetAng() > 90)
-		{
-			_ang = UNIQUELIBRARY.AdjustmentLowerLimit(_ang, 200.0f);
-			CalculateHitPos(_pos.x, (m_reflectorProcess->GetLength() * cosO  - m_reflectorProcess->GetPos().x - _scale));
-		}
-		else if (m_reflectorProcess->GetAng() < 90)
-		{
-			_ang = UNIQUELIBRARY.AdjustmentUpperLimit(_ang, 160.0f);
-			CalculateHitPos(_pos.x, (m_reflectorProcess->GetLength() * cosO + m_reflectorProcess->GetPos().x - _scale));
-		}
-		else
-		{
-			if (_pos.x > m_reflectorProcess->GetPos().x)
-			{
-				_ang = UNIQUELIBRARY.AdjustmentLowerLimit(_ang, 200.0f);
-				CalculateHitPos(_pos.x, (m_reflectorProcess->GetLength() * cosO - m_reflectorProcess->GetPos().x - _scale));
-			}
-			else
-			{
-				_ang = UNIQUELIBRARY.AdjustmentUpperLimit(_ang, 160.0f);
-				CalculateHitPos(_pos.x, (m_reflectorProcess->GetLength() * cosO + m_reflectorProcess->GetPos().x - _scale));
-			}
-		}
-	}
-
-	return true;
-}
-
-void BattleScene::CalculateHitPos(float& _standardPos, const float& _objectPos)
-{
-	if (_standardPos >= 0)
-	{
-		_standardPos += abs(_objectPos) - abs(_standardPos);
-	}
-	else
-	{
-		_standardPos -= abs(_objectPos) - abs(_standardPos);
-	}
 }
 
 void BattleScene::CalculateHitAng(float& _standardAng, const float& _objectAng)

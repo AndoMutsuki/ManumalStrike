@@ -4,12 +4,12 @@ using namespace ManumalStrikeNamespace;
 
 FirstShotProcess::FirstShotProcess()
 {
-	m_arrowTex = TEXMANA.GetTex("Data/Texture/BattleScene/arrow.png");
-	m_touchingFlg = false;
+	m_arrowTex		= TEXMANA.GetTex("Data/Texture/BattleScene/arrow.png");
+	m_keepManumalFlg	= false;
 	m_firstMousePos = Math::Vector2::Zero;
-	m_arrowSpeed = 0;
-	m_arrowAng = 0;	
-	m_arrowMat = Math::Matrix::Identity;
+	m_arrowSpeed	= 0;
+	m_arrowAng		= 0;	
+	m_arrowMat		= Math::Matrix::Identity;
 }
 
 FirstShotProcess::~FirstShotProcess()
@@ -35,6 +35,11 @@ void FirstShotProcess::DrawArrow() const
 	UNIQUELIBRARY.Draw2D(m_arrowMat, m_arrowTex, 200, 1000, 0.8f);
 }
 
+const bool FirstShotProcess::GetClickFlg()
+{
+	return m_keepManumalFlg;
+}
+
 const bool FirstShotProcess::GetArrowDrawFlg()
 {
 	return DoCalculateArrowMat();
@@ -54,14 +59,14 @@ void FirstShotProcess::CalculateFirstMousePos()
 
 void FirstShotProcess::ClickProcess()
 {
-	float manumalMouseLength = UNIQUELIBRARY.GetVecLength(m_manumalData.pos, Math::Vector2{ m_nowMousePos.x,m_nowMousePos.y });
-	bool hitManumalMouse = manumalMouseLength < m_manumalData.scale;
+	float manumalMouseLength = UNIQUELIBRARY.GetVecLength(m_manumalData.pos, Math::Vector2{ m_nowMousePos.x,m_nowMousePos.y });	//マニュマルとマウスの長さ
+	bool hitManumalMouse = manumalMouseLength < m_manumalData.scale;	//マニュマルとマウスが当たっているか
 	if (hitManumalMouse)
 	{
 		bool firstTouchFlg = m_firstMousePos == Math::Vector2::Zero;	//初めてマニュマルに触ったかどうか
 		if (firstTouchFlg)
 		{
-			m_touchingFlg = true;
+			m_keepManumalFlg = true;
 			m_firstMousePos = { m_nowMousePos.x,m_nowMousePos.y };
 		}
 	}
@@ -72,7 +77,7 @@ void FirstShotProcess::NoClickProcess()
 	bool touchedFlg = m_firstMousePos != Math::Vector2::Zero;	//すでに触っているかどうか
 	if (touchedFlg)
 	{
-		m_touchingFlg = false;
+		m_keepManumalFlg = false;
 		SetManumalFirstShotData();
 	}
 
@@ -89,7 +94,9 @@ void FirstShotProcess::SetManumalFirstShotData()
 void FirstShotProcess::CalculateArrowSpeed()
 {
 	m_arrowSpeed = UNIQUELIBRARY.GetVecLength(Math::Vector2{ m_nowMousePos.x,m_nowMousePos.y }, m_firstMousePos) / 10.0f;
-	if (m_arrowSpeed < m_arrowSpeedMin)
+
+	bool arrowSpeedMinLess = m_arrowSpeed < m_arrowSpeedMin;	//スピードが下限より下であるか
+	if (arrowSpeedMinLess)
 	{
 		m_arrowSpeed = 0;
 	}
@@ -113,7 +120,7 @@ void FirstShotProcess::CalculateArrowMat()
 
 const bool FirstShotProcess::DoCalculateArrowMat()
 {
-	if (!m_touchingFlg)return false;
+	if (!m_keepManumalFlg)return false;
 	bool arrowMinOverFlg = m_arrowSpeed != 0;	//初期スピードがあるか
 	if (!arrowMinOverFlg)return false;
 	return true;
