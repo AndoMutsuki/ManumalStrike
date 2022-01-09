@@ -91,6 +91,12 @@
     <Filter Include="Src\Application\BattleProcess\HitManumalwallProcess">
       <UniqueIdentifier>{c3f2c7f6-27ab-46ee-8cc1-74d262105fcd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\BattleProcess\ManumalMutualCollision">
+      <UniqueIdentifier>{35ca5353-fbad-4202-bb13-409dc3a937b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\BattleProcess\ManumalEnemyCollison">
+      <UniqueIdentifier>{fad43d8a-1c4f-42b9-b0aa-7ec2f4c93098}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -228,6 +234,12 @@
     <ClInclude Include="Src\Application\BattleProcess\HitManumalwallProcess\HitManumalwallProcess.h">
       <Filter>Src\Application\BattleProcess\HitManumalwallProcess</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\BattleProcess\ManumalMutualCollision\ManumalMutualCollision.h">
+      <Filter>Src\Application\BattleProcess\ManumalMutualCollision</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\BattleProcess\ManumalEnemyCollison\ManumalEnemyCollison.h">
+      <Filter>Src\Application\BattleProcess\ManumalEnemyCollison</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -328,6 +340,12 @@
     </ClCompile>
     <ClCompile Include="Src\Application\BattleProcess\HitManumalwallProcess\HitManumalwallProcess.cpp">
       <Filter>Src\Application\BattleProcess\HitManumalwallProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\BattleProcess\ManumalMutualCollision\ManumalMutualCollision.cpp">
+      <Filter>Src\Application\BattleProcess\ManumalMutualCollision</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\BattleProcess\ManumalEnemyCollison\ManumalEnemyCollison.cpp">
+      <Filter>Src\Application\BattleProcess\ManumalEnemyCollison</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

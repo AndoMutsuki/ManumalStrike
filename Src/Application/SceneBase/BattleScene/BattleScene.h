@@ -17,18 +17,11 @@ private:
 	MouseProcess*				m_mouseProcess = nullptr;
 	FirstShotProcess*			m_firstShotProcess = nullptr;
 	ReflectorProcess*			m_reflectorProcess = nullptr;
+	ManumalMutualCollision*		m_manumalMutualCollision = nullptr;
+	ManumalEnemyCollison*		m_manumalEnemyCollison = nullptr;
 	HitManumalwallProcess*		m_hitManumalwallProcess = nullptr;
 	HitManumalReflectorProcess* m_hitManumalReflectorProcess = nullptr;
 	std::vector<ManumalBase*>	m_manumalList;
-
-	//オブジェクトにぶつかっていたら、折り返した角度をもとめる
-	void CalculateHitAng(float& _standardAng, const float& _objectAng);	
-
-	//マニュマル同士の当たり判定
-	void ManumalMutualCollision();
-
-	//マニュマルと敵の当たり判定
-	void ManumalEnemyCollision();
 
 	//エフェクトの描画
 	void EffectDraw();

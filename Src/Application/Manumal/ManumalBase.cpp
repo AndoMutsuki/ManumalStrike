@@ -1,7 +1,5 @@
 #include"Application/Headers.h"
 
-using namespace ManumalStrikeNamespace;
-
 ManumalBase::ManumalBase()
 {
 }
@@ -12,8 +10,9 @@ ManumalBase::~ManumalBase()
 
 void ManumalBase::Draw()
 {
-	float texMagnification = CalculateTexMagnification();	//‰æ‘œ‚ÌŠg‘å—¦
-	Math::Matrix scaleMat = DirectX::XMMatrixScaling(texMagnification, texMagnification, texMagnification);
+	float texMagnification	= CalculateTexMagnification();	//‰æ‘œ‚ÌŠg‘å—¦
+	Math::Matrix scaleMat	= DirectX::XMMatrixScaling(texMagnification, texMagnification, texMagnification);
+
 	UNIQUELIBRARY.Draw2D(scaleMat * m_manumalData.mat, m_texData.tex, &m_texData.rec, &m_texData.color);
 }
 

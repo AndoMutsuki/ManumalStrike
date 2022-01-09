@@ -1,7 +1,5 @@
 #include"Application/Headers.h"
 
-using namespace ManumalStrikeNamespace;
-
 ReflectorProcess::ReflectorProcess()
 {
 	m_tex		= TEXMANA.GetTex("Data/Texture/BattleScene/reflector.png");
@@ -62,7 +60,7 @@ void ReflectorProcess::CalculatePos()
 
 void ReflectorProcess::MoveRight()
 {
-	m_pos.x += m_moveSpeed;
+	m_pos.x	+= m_moveSpeed;
 	m_pos.x = UNIQUELIBRARY.AdjustmentUpperLimit(m_pos.x, Width - m_length);
 }
 
@@ -88,6 +86,7 @@ void ReflectorProcess::CalculateAng()
 void ReflectorProcess::LeanRight()
 {
 	float m_reflectorAngLimit = 120.0f;	//反射板の角度の最大値
+
 	m_ang += m_angSpeed;
 	m_ang = UNIQUELIBRARY.AdjustmentUpperLimit(m_ang, m_reflectorAngLimit);
 }
@@ -95,6 +94,7 @@ void ReflectorProcess::LeanRight()
 void ReflectorProcess::LeanLeft()
 {
 	float reflectorAngLower = 60.0f;	//反射板の角度の最小値
+
 	m_ang -= m_angSpeed;
 	m_ang = UNIQUELIBRARY.AdjustmentLowerLimit(m_ang, reflectorAngLower);
 }
@@ -102,6 +102,8 @@ void ReflectorProcess::LeanLeft()
 void ReflectorProcess::CalculateMatrix()
 {
 	Math::Matrix rotMat = DirectX::XMMatrixRotationZ(DirectX::XMConvertToRadians(m_ang + 90.0f));
+
 	Math::Matrix posMat = DirectX::XMMatrixTranslation(m_pos.x, m_pos.y, 0);
+
 	m_mat = rotMat * posMat;
 }

@@ -1,7 +1,5 @@
 #pragma once
 
-using namespace ManumalStrikeNamespace;
-
 class FirstShotProcess
 {
 public:
@@ -46,7 +44,7 @@ private:
 	bool			m_keepManumalFlg;			//マニュマルを一回選んで離すまでのフラグ
 	Math::Vector2	m_firstMousePos;			//最初のマウスの場所
 	Math::Vector2	m_nowMousePos;				//今のマウスの場所
-	float			m_arrowSpeed;				//打ち出させる速度
+	float			m_arrowSpeed;				//打ち出す速度
 	float			m_arrowAng;					//矢印の角度
 	Math::Matrix	m_arrowMat;					//矢印の行列
 	const float		m_arrowSpeedFixed = 15.0f;	//矢印の固定の速さ

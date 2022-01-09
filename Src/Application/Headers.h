@@ -10,12 +10,16 @@
 #include<EffekseerRendererDX11.h>
 #include"EffectManager/EffectManager.h"
 
+using namespace ManumalStrikeNamespace;
+
 //マウスの制御
 #include"Mouse/MouseProcess.h"
 
 //バトルの処理
 #include"BattleProcess/FirstShotProcess/FirstShotProcess.h"
 #include"BattleProcess/ReflectorProcess/ReflectorProcess.h"
+#include"BattleProcess/ManumalMutualCollision/ManumalMutualCollision.h"
+#include"BattleProcess/ManumalEnemyCollison/ManumalEnemyCollison.h"
 #include"BattleProcess/HitManumalReflectorProcess/HitManumalReflectorProcess.h"
 #include"BattleProcess/HitManumalwallProcess/HitManumalwallProcess.h"
 

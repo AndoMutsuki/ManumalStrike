@@ -164,6 +164,8 @@
     <ClInclude Include="Src\Application\BattleProcess\FirstShotProcess\FirstShotProcess.h" />
     <ClInclude Include="Src\Application\BattleProcess\HitManumalReflectorProcess\HitManumalReflectorProcess.h" />
     <ClInclude Include="Src\Application\BattleProcess\HitManumalwallProcess\HitManumalwallProcess.h" />
+    <ClInclude Include="Src\Application\BattleProcess\ManumalEnemyCollison\ManumalEnemyCollison.h" />
+    <ClInclude Include="Src\Application\BattleProcess\ManumalMutualCollision\ManumalMutualCollision.h" />
     <ClInclude Include="Src\Application\BattleProcess\ReflectorProcess\ReflectorProcess.h" />
     <ClInclude Include="Src\Application\EffectManager\EffectManager.h" />
     <ClInclude Include="Src\Application\Headers.h" />
@@ -203,6 +205,8 @@
     <ClCompile Include="Src\Application\BattleProcess\FirstShotProcess\FirstShotProcess.cpp" />
     <ClCompile Include="Src\Application\BattleProcess\HitManumalReflectorProcess\HitManumalReflectorProcess.cpp" />
     <ClCompile Include="Src\Application\BattleProcess\HitManumalwallProcess\HitManumalwallProcess.cpp" />
+    <ClCompile Include="Src\Application\BattleProcess\ManumalEnemyCollison\ManumalEnemyCollison.cpp" />
+    <ClCompile Include="Src\Application\BattleProcess\ManumalMutualCollision\ManumalMutualCollision.cpp" />
     <ClCompile Include="Src\Application\BattleProcess\ReflectorProcess\ReflectorProcess.cpp" />
     <ClCompile Include="Src\Application\EffectManager\EffectManager.cpp" />
     <ClCompile Include="Src\Application\Manumal\ManumalBase.cpp" />

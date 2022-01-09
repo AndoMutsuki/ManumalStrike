@@ -1,7 +1,5 @@
 #include"Application/Headers.h"
 
-using namespace ManumalStrikeNamespace;
-
 Morumon::Morumon()
 {
 	m_data.HP				= 10;

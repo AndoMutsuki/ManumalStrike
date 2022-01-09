@@ -1,7 +1,5 @@
 #pragma once
 
-using namespace ManumalStrikeNamespace;
-
 class Morumon :public ManumalBase
 {
 public:
