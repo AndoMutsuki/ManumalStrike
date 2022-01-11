@@ -1,12 +1,13 @@
 #pragma once
 
-class HitManumalwallProcess
+//マニュマルが壁に当たる処理
+class HitManumalWallProcess
 {
 public:
 
-	HitManumalwallProcess();
+	HitManumalWallProcess();
 
-	~HitManumalwallProcess();
+	~HitManumalWallProcess();
 
 	//マニュマルのデータをセット
 	void Update(manumalData& _manumalData);
@@ -18,8 +19,11 @@ private:
 	//壁の横に当たった時の処理
 	void HitSideWallProcess();
 
-	//壁の上と下に当たった時の処理
-	void HitLengthWallProcess();
+	//壁の上に当たった時の処理
+	void HitTopWallProcess();
+
+	//壁の下に当たった時の処理
+	void HitBottomWallProcess();
 
 	manumalData m_manumalData;
 

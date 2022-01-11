@@ -2,6 +2,7 @@
 
 ManumalBase::ManumalBase()
 {
+	m_manumalCircleTex = TEXMANA.GetTex("Data/Texture/Manumal/manumalCircle.png");
 }
 
 ManumalBase::~ManumalBase()
@@ -13,6 +14,7 @@ void ManumalBase::Draw()
 	float texMagnification	= CalculateTexMagnification();	//‰æ‘œ‚ÌŠg‘å—¦
 	Math::Matrix scaleMat	= DirectX::XMMatrixScaling(texMagnification, texMagnification, texMagnification);
 
+	UNIQUELIBRARY.Draw2D(scaleMat * m_manumalData.mat, m_manumalCircleTex, 100, 100, 0.8f);
 	UNIQUELIBRARY.Draw2D(scaleMat * m_manumalData.mat, m_texData.tex, &m_texData.rec, &m_texData.color);
 }
 
@@ -36,7 +38,7 @@ void ManumalBase::CalculateMoveVec()
 
 void ManumalBase::MoveProcess()
 {
-	m_manumalData.pos += m_manumalData.moveVec * m_manumalData.power;
+	m_manumalData.pos += m_manumalData.moveVec * m_manumalData.nowSpeed;
 }
 
 void ManumalBase::SetManumalData(const manumalData& _manumalData)

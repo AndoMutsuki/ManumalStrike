@@ -97,6 +97,24 @@
     <Filter Include="Src\Application\BattleProcess\ManumalEnemyCollison">
       <UniqueIdentifier>{fad43d8a-1c4f-42b9-b0aa-7ec2f4c93098}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\BattleProcess\DrawProcess">
+      <UniqueIdentifier>{4cc9fd8c-f129-4845-ada0-dfe76acb2f01}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\BattleProcess\DrawProcess\StageData">
+      <UniqueIdentifier>{58225bf6-7651-4a94-9e3e-ae15c71044a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\BattleProcess\DrawProcess\StageData\Stage1">
+      <UniqueIdentifier>{66ff8e3a-798a-4f65-bf98-ba1c98e091b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\BattleProcess\DrawProcess\BattleStatusBarProcess">
+      <UniqueIdentifier>{d011a686-b971-4562-a9b8-791904bb9b64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\BattleProcess\CalculateHP">
+      <UniqueIdentifier>{ba147e47-b63e-44cc-93ec-6632d9d162db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\ImGuiManager">
+      <UniqueIdentifier>{e96eef7b-c2b6-41b6-b018-699ec8e5e3e4}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -240,6 +258,24 @@
     <ClInclude Include="Src\Application\BattleProcess\ManumalEnemyCollison\ManumalEnemyCollison.h">
       <Filter>Src\Application\BattleProcess\ManumalEnemyCollison</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\BattleProcess\StageDrawProcess\StageDataBase\Stage1\Stage1.h">
+      <Filter>Src\Application\BattleProcess\DrawProcess\StageData\Stage1</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\BattleProcess\DrawProcess\DrawProcess.h">
+      <Filter>Src\Application\BattleProcess\DrawProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\BattleProcess\DrawProcess\StageDataBase\StageDataBase.h">
+      <Filter>Src\Application\BattleProcess\DrawProcess\StageData</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\BattleProcess\DrawProcess\BattleStatusBarProcess\BattleStatusBarProcess.h">
+      <Filter>Src\Application\BattleProcess\DrawProcess\BattleStatusBarProcess</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\BattleProcess\CalculateHP\CalculateHP.h">
+      <Filter>Src\Application\BattleProcess\CalculateHP</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\ImGuiManager\ImGuiManager.h">
+      <Filter>Src\Application\ImGuiManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -346,6 +382,24 @@
     </ClCompile>
     <ClCompile Include="Src\Application\BattleProcess\ManumalEnemyCollison\ManumalEnemyCollison.cpp">
       <Filter>Src\Application\BattleProcess\ManumalEnemyCollison</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\BattleProcess\StageDrawProcess\StageDataBase\Stage1\Stage1.cpp">
+      <Filter>Src\Application\BattleProcess\DrawProcess\StageData\Stage1</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\BattleProcess\DrawProcess\DrawProcess.cpp">
+      <Filter>Src\Application\BattleProcess\DrawProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\BattleProcess\StageDrawProcess\StageDataBase\StageDataBase.cpp">
+      <Filter>Src\Application\BattleProcess\DrawProcess\StageData</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\BattleProcess\DrawProcess\BattleStatusBarProcess\BattleStatusBarProcess.cpp">
+      <Filter>Src\Application\BattleProcess\DrawProcess\BattleStatusBarProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\BattleProcess\CalculateHP\CalculateHP.cpp">
+      <Filter>Src\Application\BattleProcess\CalculateHP</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\ImGuiManager\ImGuiManager.cpp">
+      <Filter>Src\Application\ImGuiManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

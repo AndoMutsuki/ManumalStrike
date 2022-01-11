@@ -19,10 +19,6 @@ public:
 	// GUIˆ—
 	void ImGuiUpdate();
 
-	//GUI‚Å•\¦‚³‚¹‚é•Ï”‚ğ‚Æ‚Á‚Ä‚­‚é
-	void SetGUIVariable(const float _ang);
-	void SetGUIFlg(const int _flg);
-
 	static Scene& GetInstance()
 	{
 		static Scene instance;
@@ -40,10 +36,6 @@ private:
 	Scene() {}
 
 	SceneBase* m_sceneBase;
-
-	//GUI•\¦—p‚Ì•Ï”
-	float m_ang;
-	int m_flg;
 
 };
 

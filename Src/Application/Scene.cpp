@@ -27,25 +27,5 @@ void Scene::Release()	//終了処理
 
 void Scene::ImGuiUpdate()
 {
-	//return;
-
-	ImGui::SetNextWindowPos(ImVec2(20, 20), ImGuiSetCond_Once);
-	ImGui::SetNextWindowSize(ImVec2(200, 100), ImGuiSetCond_Once);
-
-	// デバッグウィンドウ
-	if (ImGui::Begin("Debug Window"))
-	{
-		ImGui::Text("FPS : %d\nAng : %f\n%d", APP.m_fps, m_ang, m_flg);
-	}
-	ImGui::End();
-}
-
-void Scene::SetGUIVariable(const float _ang)
-{
-	m_ang = _ang;
-}
-
-void Scene::SetGUIFlg(const int _flg)
-{
-	m_flg = _flg;
+	IMGUIMANA.Update();
 }

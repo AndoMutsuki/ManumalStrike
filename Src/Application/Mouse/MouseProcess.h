@@ -1,5 +1,6 @@
 #pragma once
 
+//ƒ}ƒEƒX‚Ìˆ—
 class MouseProcess
 {
 public:

@@ -1,5 +1,6 @@
 #pragma once
 
+//”½Ë”Â‚Ìˆ—
 class ReflectorProcess
 {
 public: 

@@ -1,5 +1,6 @@
 #pragma once
 
+//ƒ}ƒjƒ…ƒ}ƒ‹‚Æ“G‚Ì“–‚½‚è”»’è
 class ManumalEnemyCollison
 {
 public:

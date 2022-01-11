@@ -7,8 +7,10 @@ BattleScene::BattleScene()
 	m_reflectorProcess = new ReflectorProcess;
 	m_manumalMutualCollision = new ManumalMutualCollision;
 	m_manumalEnemyCollison = new ManumalEnemyCollison;
-	m_hitManumalwallProcess = new HitManumalwallProcess;
+	m_hitManumalwallProcess = new HitManumalWallProcess;
 	m_hitManumalReflectorProcess = new HitManumalReflectorProcess;
+	m_calculateHP = new CalculateHP;
+	m_drawProcess = new DrawProcess;
 	m_manumalList.clear();
 	m_manumalList.push_back(new Morumon);
 	m_manumalList.push_back(new Morumon);
@@ -16,50 +18,10 @@ BattleScene::BattleScene()
 	m_manumalList[1]->SetPos({ 200,0 });
 	m_manumalList[2]->SetPos({ -200,0 });
 
-	m_scale = 40.0f;
-	m_ang1 = 0.0f;
-	m_power1 = 0;
-
-	m_ang2 = 0;
-	m_ang3 = 0;
-	m_power2 = 0;
-	m_power3 = 0;
-
-
-	m_arrowTex = TEXMANA.GetTex("Data/Texture/BattleScene/arrow.png");
-	m_arrowFlg = false;
-	m_firstArrowPos = Math::Vector2::Zero;
-	m_arrowAng = 0;
-	m_arrowMat = Math::Matrix::Identity;
-	m_arrowScale = 0;
-
-	m_reflectorLength = m_reflectorProcess->GetLength();
-	m_reflectorAng = m_reflectorProcess->GetAng();
-	m_reflectorPos = m_reflectorProcess->GetPos();
-	m_reflectorMat = Math::Matrix::Identity;
-
-	m_mat1 = Math::Matrix::Identity;
-	m_mat2 = Math::Matrix::Identity;
-	m_mat3 = Math::Matrix::Identity;
-
-	m_pos1 = Math::Vector2::Zero;
-	m_pos2 = { 200,0 };
-	m_pos3 = { -200,0 };
-
-	m_moveVec1 = Math::Vector2::Zero;
-	m_moveVec2 = Math::Vector2::Zero;
-	m_moveVec3 = Math::Vector2::Zero;
-
-	for (auto i = m_manumalList.begin(); i != m_manumalList.end(); ++i)
-	{
-		(*i)->CalculateMoveVec();
-	}
-
-	m_rec1 = { 0,0,800,800 };
-	m_color1 = { 1.0f,1.0f,1.0f,1.0f };
-
-	m_tex = TEXMANA.GetTex("Data/Texture/Manumal/test.jpg");
-	m_reflectorTex = TEXMANA.GetTex("Data/Texture/BattleScene/reflector.png");
+	//Å‘åHP‚ðŒvŽZ
+	int HPMax = std::accumulate(m_manumalList.begin(), m_manumalList.end(), 0,
+		[](int HP, ManumalBase* manumalBase) { return HP + manumalBase->GetManumalData().HP; });
+	m_calculateHP->SetHPMax(HPMax);
 
 	m_effect = *(EFFEKSEER.GetEffect(uR"(Data/Effect/reflectWall/reflectWall.efk)"));
 	m_handle = 0;
@@ -76,7 +38,11 @@ BattleScene::~BattleScene()
 	delete m_mouseProcess;
 	delete m_firstShotProcess;
 	delete m_reflectorProcess;
+	delete m_manumalMutualCollision;
+	delete m_manumalEnemyCollison;
+	delete m_hitManumalwallProcess;
 	delete m_hitManumalReflectorProcess;
+	delete m_drawProcess;
 	m_manumalList.clear();
 }
 
@@ -85,82 +51,68 @@ void BattleScene::Update()
 	m_mousePos = m_mouseProcess->Update(m_mousePos);
 
 	m_firstShotProcess->Update(m_manumalList[0]->GetManumalDataKinetic(), m_mousePos);
-	for (auto i = m_manumalList.begin(); i != m_manumalList.end(); ++i)
-	{
-		(*i)->CalculateMoveVec();
-	}
+	m_manumalList[0]->CalculateMoveVec();
 
 	m_reflectorProcess->Update(m_firstShotProcess->GetClickFlg());
 
 	m_manumalMutualCollision->Update(m_manumalList[0]->GetManumalData(), m_manumalList[1]->GetManumalDataKinetic());
 	if (m_manumalMutualCollision->GetmHitManumalMutualFlg())
 	{
-		for (auto i = m_manumalList.begin(); i != m_manumalList.end(); ++i)
-		{
-			(*i)->CalculateMoveVec();
-		}
+		std::for_each(m_manumalList.begin(), m_manumalList.end(),
+			std::mem_fun(&ManumalBase::CalculateMoveVec));
 	}
 
 	m_manumalEnemyCollison->Update(m_manumalList[0]->GetManumalDataKinetic(), m_manumalList[2]->GetManumalData());
 	if (m_manumalEnemyCollison->GetHitManumalEnemyFlg())
 	{
-		for (auto i = m_manumalList.begin(); i != m_manumalList.end(); ++i)
-		{
-			(*i)->CalculateMoveVec();
-		}
+		std::for_each(m_manumalList.begin(), m_manumalList.end(),
+			std::mem_fun(&ManumalBase::CalculateMoveVec));
 	}
 
-	for (auto i = m_manumalList.begin(); i != m_manumalList.end(); ++i)
-	{
-		(*i)->MoveProcess();
-	}
+	std::for_each(m_manumalList.begin(), m_manumalList.end(),
+		std::mem_fun(&ManumalBase::MoveProcess));
 
-	//•Ç‚Å’µ‚Ë•Ô‚éˆ—
-	for (auto i = m_manumalList.begin(); i != m_manumalList.end(); ++i)
+	m_calculateHP->Update();
+	if (!m_calculateHP->GetAliveFlg())
 	{
-		m_hitManumalwallProcess->Update((*i)->GetManumalDataKinetic());
-		if (m_hitManumalwallProcess->GetHitWallFlg())
-		{
-			(*i)->CalculateMoveVec();
-		}
+		return;
 	}
 
 	//”½ŽË”Â‚Å’µ‚Ë•Ô‚éˆ—
-	for (auto i = m_manumalList.begin(); i != m_manumalList.end(); ++i)
+	m_hitManumalReflectorProcess->Update(m_manumalList[0]->GetManumalDataKinetic(), m_reflectorProcess);
+	if (m_hitManumalReflectorProcess->GetHitReflectorFlg())
 	{
-		m_hitManumalReflectorProcess->Update((*i)->GetManumalDataKinetic(), m_reflectorProcess);
-		if (m_hitManumalReflectorProcess->GetHitReflectorFlg())
+		m_manumalList[0]->CalculateMoveVec();
+	}
+
+	//•Ç‚Å’µ‚Ë•Ô‚éˆ—
+	for (auto iter = m_manumalList.begin(); iter != m_manumalList.end(); ++iter)
+	{
+		m_hitManumalwallProcess->Update((*iter)->GetManumalDataKinetic());
+		if (m_hitManumalwallProcess->GetHitWallFlg())
 		{
-			(*i)->CalculateMoveVec();
+			(*iter)->CalculateMoveVec();
 		}
 	}
 
-	for (auto i = m_manumalList.begin(); i != m_manumalList.end(); ++i)
-	{
-		(*i)->CalculateMatrix();
-	}
+	std::for_each(m_manumalList.begin(), m_manumalList.end(),
+		std::mem_fun(&ManumalBase::CalculateMatrix));
 }
 
 void BattleScene::Draw2D()
 {
 	SHADER.m_spriteShader.Begin();
 
-	for (auto i = m_manumalList.begin(); i != m_manumalList.end(); ++i)
-	{
-		(*i)->Draw();
-	}
+	m_drawProcess->Draw();
+
+	std::for_each(m_manumalList.begin(), m_manumalList.end(),
+		std::mem_fun(&ManumalBase::Draw));
 
 	m_reflectorProcess->Draw();
 
 	if (m_firstShotProcess->GetArrowDrawFlg())
 	{
 		m_firstShotProcess->DrawArrow();
-	}
-
-	bool arrowMinOverFlg = m_arrowScale != 0;
-	if (m_arrowFlg && arrowMinOverFlg)
-	{
-		UNIQUELIBRARY.Draw2D(m_arrowMat, m_arrowTex, 200, 1000, 0.8f);
 	}
 
 	EffectDraw();

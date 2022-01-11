@@ -1,5 +1,6 @@
 #pragma once
 
+//ƒ}ƒjƒ…ƒ}ƒ‹“¯Žm‚Ì“–‚½‚è”»’è
 class ManumalMutualCollision
 {
 public:

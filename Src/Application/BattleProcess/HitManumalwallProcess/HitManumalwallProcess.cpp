@@ -1,15 +1,15 @@
 #include"Application/Headers.h"
 
-HitManumalwallProcess::HitManumalwallProcess()
+HitManumalWallProcess::HitManumalWallProcess()
 {
 	m_hitWallFlg = false;
 }
 
-HitManumalwallProcess::~HitManumalwallProcess()
+HitManumalWallProcess::~HitManumalWallProcess()
 {
 }
 
-void HitManumalwallProcess::Update(manumalData& _manumalData)
+void HitManumalWallProcess::Update(manumalData& _manumalData)
 {
 	m_hitWallFlg = false;
 
@@ -24,31 +24,46 @@ void HitManumalwallProcess::Update(manumalData& _manumalData)
 		HitSideWallProcess();
 	}
 
-	bool hitLengthWall = (Height - m_manumalData.scale) < abs(m_manumalData.pos.y);	//ï«ÇÃè„Ç∆â∫Ç…ìñÇΩÇ¡ÇƒÇ¢ÇÈÇ©
-	if (hitLengthWall)
+	bool hitTopWall		= (Top - m_manumalData.scale) < m_manumalData.pos.y;	//ï«ÇÃè„Ç…ìñÇΩÇ¡ÇƒÇ¢ÇÈÇ©
+	bool hitBottomWall	= (Bottom + m_manumalData.scale) > m_manumalData.pos.y;	//ï«ÇÃâ∫Ç…ìñÇΩÇ¡ÇƒÇ¢ÇÈÇ©
+
+	if (hitTopWall)
 	{
 		m_hitWallFlg = true;
 		
-		HitLengthWallProcess();
+		HitTopWallProcess();
+	}
+
+	if (hitBottomWall)
+	{
+		m_hitWallFlg = true;
+
+		HitBottomWallProcess();
 	}
 
 	//ãÅÇﬂÇΩÉfÅ[É^Çäiî[Ç∑ÇÈ
 	_manumalData = m_manumalData;
 }
 
-const bool HitManumalwallProcess::GetHitWallFlg() const
+const bool HitManumalWallProcess::GetHitWallFlg() const
 {
 	return m_hitWallFlg;
 }
 
-void HitManumalwallProcess::HitSideWallProcess()
+void HitManumalWallProcess::HitSideWallProcess()
 {
 	m_manumalData.pos.x = UNIQUELIBRARY.CalculateReflectPos(m_manumalData.pos.x, (float)(Width - m_manumalData.scale));
 	m_manumalData.ang	= UNIQUELIBRARY.CalculateReflectAng(m_manumalData.ang, 0);
 }
 
-void HitManumalwallProcess::HitLengthWallProcess()
+void HitManumalWallProcess::HitTopWallProcess()
 {
-	m_manumalData.pos.y = UNIQUELIBRARY.CalculateReflectPos(m_manumalData.pos.y, (float)(Height - m_manumalData.scale));
+	m_manumalData.pos.y = UNIQUELIBRARY.CalculateReflectPos(m_manumalData.pos.y, (float)(Top - m_manumalData.scale));
+	m_manumalData.ang	= UNIQUELIBRARY.CalculateReflectAng(m_manumalData.ang, 90);
+}
+
+void HitManumalWallProcess::HitBottomWallProcess()
+{
+	m_manumalData.pos.y = UNIQUELIBRARY.CalculateReflectPos(m_manumalData.pos.y, (float)(Bottom + m_manumalData.scale));
 	m_manumalData.ang	= UNIQUELIBRARY.CalculateReflectAng(m_manumalData.ang, 90);
 }

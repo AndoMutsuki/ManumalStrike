@@ -3,11 +3,12 @@
 namespace ManumalStrikeNamespace
 {
 	//画面の大きさ
-	static const int Width = 640;
-	static const int Height = 360;
+	static const int Width	= 640;
+	static const int Top	= 360;
+	static const int Bottom = -300;
 
 	//反射板のy座標
-	static const int ReflectorPosY = 280;
+	static const int ReflectorPosY = 220;
 
 	//敵と当たった時の挙動の種類
 	enum class enemyHitType
@@ -35,7 +36,7 @@ namespace ManumalStrikeNamespace
 		Math::Vector2	pos;			//位置
 		Math::Vector2	moveVec;		//進む向き
 		float			ang;			//角度
-		float			power;			//進む大きさ
+		float			nowSpeed;			//進む大きさ
 		Math::Matrix	mat;			//行列
 	};
 

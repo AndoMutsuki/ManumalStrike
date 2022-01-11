@@ -1,5 +1,6 @@
 #pragma once
 
+//ƒ}ƒjƒ…ƒ}ƒ‹‚ª”½Ë”Â‚É“–‚½‚éˆ—
 class HitManumalReflectorProcess
 {
 public:

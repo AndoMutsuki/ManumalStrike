@@ -86,7 +86,7 @@ void FirstShotProcess::NoClickProcess()
 void FirstShotProcess::SetManumalFirstShotData()
 {
 	//ƒpƒ[‚ğ“ü‚ê‚é
-	m_manumalData.power = m_arrowSpeed;
+	m_manumalData.nowSpeed = m_arrowSpeed;
 
 	//Šp“x‚ğ“ü‚ê‚é
 	float arrowAng		= UNIQUELIBRARY.GetVecAng(m_firstMousePos, Math::Vector2{ m_nowMousePos.x,m_nowMousePos.y });

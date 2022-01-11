@@ -1,5 +1,6 @@
 #pragma once
 
+//マニュマルを最初に打ち出す処理
 class FirstShotProcess
 {
 public:

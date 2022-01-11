@@ -42,4 +42,6 @@ private:
 	manumalData			m_manumalData;
 	manumalTextureData	m_texData;
 
+	KdTexture* m_manumalCircleTex;	//ƒ}ƒjƒ…ƒ}ƒ‹‚ÌŽü‚è‚Ì‰~
+
 };

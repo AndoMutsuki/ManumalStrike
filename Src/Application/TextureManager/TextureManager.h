@@ -3,9 +3,6 @@
 class TexManager
 {
 public:
-	~TexManager();
-
-	KdTexture* GetTex(const std::string& _file_name);
 
 	static TexManager& GetInstance()
 	{
@@ -14,7 +11,12 @@ public:
 		return instance;
 	}
 
+	~TexManager();
+
+	KdTexture* GetTex(const std::string& _file_name);
+
 private:
+
 	TexManager() {}
 
 	std::map <std::string, KdTexture*>m_texList;
