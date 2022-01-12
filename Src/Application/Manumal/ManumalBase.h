@@ -29,7 +29,7 @@ public:
 	virtual manumalData& GetManumalDataKinetic();
 
 	//画像データを派生クラスで入力
-	void SetTexData(const manumalTextureData& _texData);
+	void SetTexData(const textureData& _texData);
 
 	//位置のセッター
 	virtual void SetPos(const Math::Vector2& _pos);
@@ -39,8 +39,8 @@ private:
 	//画像の拡大率を算出
 	const float CalculateTexMagnification();
 
-	manumalData			m_manumalData;
-	manumalTextureData	m_texData;
+	manumalData	m_manumalData;
+	textureData	m_texData;
 
 	KdTexture* m_manumalCircleTex;	//マニュマルの周りの円
 

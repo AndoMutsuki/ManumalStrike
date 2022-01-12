@@ -38,11 +38,10 @@ void ManumalMutualCollision::CalculateHitManumalMutualFlg()
 
 void ManumalMutualCollision::CalculateReflecte()
 {
-	//反射した後の位置の計算
-	Math::Vector2 betweenVec	= m_hitedManumalData.pos - m_movingManumalData.pos;
-	betweenVec.Normalize();
-	Math::Vector2 reflectedPos	= m_movingManumalData.pos + betweenVec * (m_movingManumalData.scale + m_hitedManumalData.scale);	//反射した後の位置
-	m_hitedManumalData.pos		= reflectedPos;
+	//反射した後のスピードの計算
+	float speedFixed	= 5.0f;	//スピードの固定値
+	float speed			= speedFixed + m_movingManumalData.nowSpeed * 0.05f;	//実際のスピード
+	m_hitedManumalData.nowSpeed = speed;
 
 	//反射した後の角度の計算
 	float reflectedAng		= -UNIQUELIBRARY.GetVecAng(m_hitedManumalData.pos, m_movingManumalData.pos);	//反射した後の角度

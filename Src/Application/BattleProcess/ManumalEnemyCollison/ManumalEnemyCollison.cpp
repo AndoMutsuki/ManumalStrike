@@ -9,7 +9,7 @@ ManumalEnemyCollison::~ManumalEnemyCollison()
 {
 }
 
-void ManumalEnemyCollison::Update(manumalData& _movingManumalData, const manumalData& _hitEnemyData)
+void ManumalEnemyCollison::Update(manumalData& _movingManumalData, const enemyData& _hitEnemyData)
 {
 	//ƒƒ“ƒo•Ï”‚É•ÏŠ·‚·‚é
 	m_movingManumalData = _movingManumalData;

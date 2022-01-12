@@ -56,7 +56,7 @@ manumalData& ManumalBase::GetManumalDataKinetic()
 	return m_manumalData;
 }
 
-void ManumalBase::SetTexData(const manumalTextureData& _texData)
+void ManumalBase::SetTexData(const textureData& _texData)
 {
 	m_texData = _texData;
 }

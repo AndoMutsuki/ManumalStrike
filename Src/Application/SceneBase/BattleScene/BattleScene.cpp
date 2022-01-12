@@ -10,19 +10,33 @@ BattleScene::BattleScene()
 	m_hitManumalwallProcess = new HitManumalWallProcess;
 	m_hitManumalReflectorProcess = new HitManumalReflectorProcess;
 	m_calculateHP = new CalculateHP;
+	m_calculateSpeed = new CalculateSpeed;
 	m_drawProcess = new DrawProcess;
 	m_manumalList.clear();
+	m_manumalList.push_back(new Raibit);
 	m_manumalList.push_back(new Morumon);
-	m_manumalList.push_back(new Morumon);
-	m_manumalList.push_back(new Morumon);
-	m_manumalList[1]->SetPos({ 200,0 });
-	m_manumalList[2]->SetPos({ -200,0 });
+	m_manumalList.push_back(new Pebrat);
+	m_manumalList[0]->SetPos({ -200,-100 });
+	m_manumalList[1]->SetPos({ 0,-120 });
+	m_manumalList[2]->SetPos({ 200,-100 });
+	m_enemyList.clear();
+	m_enemyList.push_back(new FireCube);
+	m_enemyList.push_back(new FireCube);
+	m_enemyList.push_back(new Hinokokko);
+	m_enemyList[0]->SetEnemyPos({ -400,250 });
+	m_enemyList[1]->SetEnemyPos({ 350,100 });
+	m_enemyList[2]->SetEnemyPos({ 0,120 });
 
 	//最大HPを計算
 	int HPMax = std::accumulate(m_manumalList.begin(), m_manumalList.end(), 0,
 		[](int HP, ManumalBase* manumalBase) { return HP + manumalBase->GetManumalData().HP; });
 	m_calculateHP->SetHPMax(HPMax);
 
+	//マニュマル関係
+	m_nowMoveManumalNum = 0;
+	m_shotedFlg = false;
+
+	//エフェクシア
 	m_effect = *(EFFEKSEER.GetEffect(uR"(Data/Effect/reflectWall/reflectWall.efk)"));
 	m_handle = 0;
 	m_effectFlg = false;
@@ -50,28 +64,92 @@ void BattleScene::Update()
 {
 	m_mousePos = m_mouseProcess->Update(m_mousePos);
 
-	m_firstShotProcess->Update(m_manumalList[0]->GetManumalDataKinetic(), m_mousePos);
-	m_manumalList[0]->CalculateMoveVec();
+	//打ち出されたらフラグを立てる
+	if (m_firstShotProcess->DoCalculateArrowMat() && !GetAsyncKeyState(MK_LBUTTON))
+	{
+		m_shotedFlg = true;
+	}
 
+	//最初に打ち出す処理
+	if (m_manumalList[m_nowMoveManumalNum]->GetManumalData().nowSpeed <= 0)
+	{
+		m_firstShotProcess->Update(m_manumalList[m_nowMoveManumalNum]->GetManumalDataKinetic(), m_mousePos);
+		m_manumalList[m_nowMoveManumalNum]->CalculateMoveVec();
+	}
+
+	//反射板の処理
 	m_reflectorProcess->Update(m_firstShotProcess->GetClickFlg());
 
-	m_manumalMutualCollision->Update(m_manumalList[0]->GetManumalData(), m_manumalList[1]->GetManumalDataKinetic());
-	if (m_manumalMutualCollision->GetmHitManumalMutualFlg())
+	//スピードの計算
+	for (auto iter = m_manumalList.begin(); iter != m_manumalList.end(); ++iter)
 	{
-		std::for_each(m_manumalList.begin(), m_manumalList.end(),
-			std::mem_fun(&ManumalBase::CalculateMoveVec));
+		m_calculateSpeed->Update((*iter)->GetManumalDataKinetic());
 	}
 
-	m_manumalEnemyCollison->Update(m_manumalList[0]->GetManumalDataKinetic(), m_manumalList[2]->GetManumalData());
-	if (m_manumalEnemyCollison->GetHitManumalEnemyFlg())
+	//全てのマニュマルが止まっているか
+	m_allManumalStopFlg = std::all_of(m_manumalList.begin(), m_manumalList.end(),
+		[](ManumalBase* manumalBase) {return manumalBase->GetManumalData().nowSpeed <= 0; });
+
+	//次のマニュマルの発射に移る
+	if (m_shotedFlg && m_allManumalStopFlg)
 	{
-		std::for_each(m_manumalList.begin(), m_manumalList.end(),
-			std::mem_fun(&ManumalBase::CalculateMoveVec));
+		m_shotedFlg = false;
+		m_nowMoveManumalNum++;
+		if (m_nowMoveManumalNum >= m_nowMoveManumalNumMax)
+		{
+			m_nowMoveManumalNum = 0;
+		}
+		return;
 	}
 
+	//マニュマルの移動処理
 	std::for_each(m_manumalList.begin(), m_manumalList.end(),
 		std::mem_fun(&ManumalBase::MoveProcess));
 
+	//マニュマル同士の当たり判定
+	for (auto iter = m_manumalList.begin(); iter != m_manumalList.end(); ++iter)
+	{
+		if (m_manumalList[m_nowMoveManumalNum] == *iter)continue;
+
+		m_manumalMutualCollision->Update(m_manumalList[m_nowMoveManumalNum]->GetManumalData(), (*iter)->GetManumalDataKinetic());
+		if (m_manumalMutualCollision->GetmHitManumalMutualFlg())
+		{
+			std::for_each(m_manumalList.begin(), m_manumalList.end(),
+				std::mem_fun(&ManumalBase::CalculateMoveVec));
+		}
+	}
+
+	for (auto iter = m_manumalList.begin(); iter != m_manumalList.end(); ++iter)
+	{
+		for (auto iter2 = m_manumalList.begin(); iter2 != m_manumalList.end(); ++iter2)
+		{
+			if (m_manumalList[m_nowMoveManumalNum] == *iter)continue;
+			if (m_manumalList[m_nowMoveManumalNum] == *iter2)continue;
+			if (iter == iter2)continue;
+
+			m_manumalMutualCollision->Update((*iter)->GetManumalDataKinetic(), (*iter2)->GetManumalDataKinetic());
+			if (m_manumalMutualCollision->GetmHitManumalMutualFlg())
+			{
+				(*iter)->CalculateMoveVec();
+				(*iter2)->CalculateMoveVec();
+			}
+		}
+	}
+
+	//マニュマルと敵の当たり判定
+	for (auto iter = m_manumalList.begin(); iter != m_manumalList.end(); ++iter)
+	{
+		for (auto iterE = m_enemyList.begin(); iterE != m_enemyList.end(); ++iterE)
+		{
+			m_manumalEnemyCollison->Update((*iter)->GetManumalDataKinetic(), (*iterE)->GetEnemyData());
+			if (m_manumalEnemyCollison->GetHitManumalEnemyFlg())
+			{
+				(*iter)->CalculateMoveVec();
+			}
+		}
+	}
+
+	//HPの計算
 	m_calculateHP->Update();
 	if (!m_calculateHP->GetAliveFlg())
 	{
@@ -79,10 +157,13 @@ void BattleScene::Update()
 	}
 
 	//反射板で跳ね返る処理
-	m_hitManumalReflectorProcess->Update(m_manumalList[0]->GetManumalDataKinetic(), m_reflectorProcess);
-	if (m_hitManumalReflectorProcess->GetHitReflectorFlg())
+	for (auto iter = m_manumalList.begin(); iter != m_manumalList.end(); ++iter)
 	{
-		m_manumalList[0]->CalculateMoveVec();
+		m_hitManumalReflectorProcess->Update((*iter)->GetManumalDataKinetic(), m_reflectorProcess);
+		if (m_hitManumalReflectorProcess->GetHitReflectorFlg())
+		{
+			(*iter)->CalculateMoveVec();
+		}
 	}
 
 	//壁で跳ね返る処理
@@ -95,8 +176,15 @@ void BattleScene::Update()
 		}
 	}
 
+	//マニュマルの行列の計算
 	std::for_each(m_manumalList.begin(), m_manumalList.end(),
 		std::mem_fun(&ManumalBase::CalculateMatrix));
+
+	//HPのセット
+	m_drawProcess->SetHPRaito(m_calculateHP->GetHPRaito());
+
+	//UI関係の処理
+	m_drawProcess->Update();
 }
 
 void BattleScene::Draw2D()
@@ -107,6 +195,9 @@ void BattleScene::Draw2D()
 
 	std::for_each(m_manumalList.begin(), m_manumalList.end(),
 		std::mem_fun(&ManumalBase::Draw));
+
+	std::for_each(m_enemyList.begin(), m_enemyList.end(),
+		std::mem_fun(&EnemyBase::Draw));
 
 	m_reflectorProcess->Draw();
 

@@ -10,7 +10,7 @@ public:
 	~ManumalEnemyCollison();
 
 	//動いているマニュマルのデータと、ぶつかった敵のデータをセット
-	void Update(manumalData& _movingManumalData, const manumalData& _hitEnemyData);
+	void Update(manumalData& _movingManumalData, const enemyData& _hitEnemyData);
 
 	const bool GetHitManumalEnemyFlg()const;
 
@@ -28,5 +28,5 @@ private:
 	bool m_hitManumalEnemyFlg;	//マニュマルと敵がぶつかっているか
 
 	manumalData m_movingManumalData;	//動いているマニュマルのデータ
-	manumalData m_hitEnemyData;			//ぶつかった敵のデータ
+	enemyData	 m_hitEnemyData;		//ぶつかった敵のデータ
 };

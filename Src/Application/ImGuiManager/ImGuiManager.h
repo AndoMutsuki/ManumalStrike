@@ -20,13 +20,13 @@ public:
 	void SetTextFloat(const char _name[100], const float _value);
 
 	//int型のスライダーの処理
-	void SetSliderIntProcess(const char _name[100], const int& _value, const int _min, const int _max);
+	void SetSliderIntProcess(const char _name[100], const int _value, const int _min, const int _max);
 
 	//float型のスライダーの処理
-	void SetSliderFloatProcess(const char _name[100], const float& _value, const float _min, const float _max);
+	void SetSliderFloatProcess(const char _name[100], const float _value, const float _min, const float _max);
 
 	//チェックボックスの処理
-	void SetCheckBox(const char _name[100], const bool& _flg);
+	void SetCheckBox(const char _name[100], const bool _flg);
 
 	const int GetSliderInt(const char _name[100]);
 
@@ -98,7 +98,7 @@ private:
 	bool ImGuiDenote;	//ImGui表示するフラグ
 
 	std::vector<StrigInt>		m_textInt;
-	std::vector<StrigFloat>		m_textfloat;
+	std::vector<StrigFloat>		m_textFloat;
 	std::vector<std::string>	m_textIntNmae;
 	std::vector<std::string>	m_textFloatName;
 

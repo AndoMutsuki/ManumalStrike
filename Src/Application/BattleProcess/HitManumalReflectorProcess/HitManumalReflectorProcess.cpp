@@ -20,7 +20,7 @@ void HitManumalReflectorProcess::Update(manumalData& _manumalData, ReflectorProc
 	m_manumalData		= _manumalData;
 	m_reflectorProcess	= _reflectorProcess;
 
-	if (m_manumalData.pos.y > -150)	return;	//反射板より明らかに上にある場合は早期リターン
+	if (m_manumalData.pos.y > -100)	return;		//反射板より明らかに上にある場合は早期リターン
 
 	if (HitManumalReflectorX())		return;		//X座標が反射板に当たっていない場合は早期リターン
 
@@ -101,13 +101,13 @@ void HitManumalReflectorProcess::HitReflectorBottomProcess()
 void HitManumalReflectorProcess::ReflectorRightUpProcess()
 {
 	m_manumalData.ang	= UNIQUELIBRARY.AdjustmentLowerLimit(m_manumalData.ang, 200.0f);
-	m_manumalData.pos.x = UNIQUELIBRARY.CalculateReflectPos(m_manumalData.pos.x, (m_reflectorProcess->GetLength() * m_cosO - m_reflectorProcess->GetPos().x - m_manumalData.scale));
+	m_manumalData.pos.x = UNIQUELIBRARY.CalculateReflectPos(m_manumalData.pos.x, (m_reflectorProcess->GetLength() * m_cosO - m_reflectorProcess->GetPos().x));
 }
 
 void HitManumalReflectorProcess::ReflectorLeftUpProcess()
 {
 	m_manumalData.ang	= UNIQUELIBRARY.AdjustmentUpperLimit(m_manumalData.ang, 160.0f);
-	m_manumalData.pos.x = UNIQUELIBRARY.CalculateReflectPos(m_manumalData.pos.x, (m_reflectorProcess->GetLength() * m_cosO + m_reflectorProcess->GetPos().x - m_manumalData.scale));
+	m_manumalData.pos.x = UNIQUELIBRARY.CalculateReflectPos(m_manumalData.pos.x, (m_reflectorProcess->GetLength() * m_cosO + m_reflectorProcess->GetPos().x));
 }
 
 void HitManumalReflectorProcess::ManumalRightComeProcess()

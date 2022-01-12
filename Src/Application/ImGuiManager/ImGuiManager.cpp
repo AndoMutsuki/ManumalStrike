@@ -3,7 +3,7 @@
 ImGuiManager::~ImGuiManager()
 {
 	m_textInt.clear();
-	m_textfloat.clear();
+	m_textFloat.clear();
 	m_sliderInt.clear();
 	m_sliderFloat.clear();
 	m_checkBoxFlg.clear();
@@ -11,6 +11,12 @@ ImGuiManager::~ImGuiManager()
 
 void ImGuiManager::Update()
 {
+#ifndef DEBUG
+
+	return;
+
+#endif // DEBUG
+
 	ChangeImGuiDenote();
 
 	if (!ImGuiDenote) return;
@@ -36,12 +42,19 @@ void ImGuiManager::Update()
 
 void ImGuiManager::SetTextInt(const char _name[100], const int _value)
 {
-	bool beenFlg = false;	//‚·‚Å‚É‚ ‚é‚©‚Ç‚¤‚©
+	bool beenFlg	= false;	//‚·‚Å‚É‚ ‚é‚©‚Ç‚¤‚©
+	int num			= 0;
 	for (UINT i = 0; i < m_textIntNmae.size(); i++)
 	{
 		beenFlg = m_textIntNmae[i] == _name;
+		num = i;
 	}
-	if (beenFlg) return;
+	
+	if (beenFlg)
+	{
+		m_textInt[num].value = _value;
+		return;
+	}
 
 	StrigInt tmpData;
 	strcpy_s(tmpData.name, _name);
@@ -54,23 +67,30 @@ void ImGuiManager::SetTextInt(const char _name[100], const int _value)
 
 void ImGuiManager::SetTextFloat(const char _name[100], const float _value)
 {
-	bool beenFlg = false;	//‚·‚Å‚É‚ ‚é‚©‚Ç‚¤‚©
+	bool beenFlg	= false;	//‚·‚Å‚É‚ ‚é‚©‚Ç‚¤‚©
+	int num			= 0;
 	for (UINT i = 0; i < m_textFloatName.size(); i++)
 	{
 		beenFlg = m_textFloatName[i] == _name;
+		num = i;
 	}
-	if (beenFlg) return;
+
+	if (beenFlg)
+	{
+		m_textFloat[num].value = _value;
+		return;
+	}
 
 	StrigFloat tmpData;
 	strcpy_s(tmpData.name, _name);
 	tmpData.value = _value;
 
-	m_textfloat.push_back(tmpData);
+	m_textFloat.push_back(tmpData);
 
 	m_textFloatName.push_back(_name);
 }
 
-void ImGuiManager::SetSliderIntProcess(const char _name[100], const int& _value, const int _min, const int _max)
+void ImGuiManager::SetSliderIntProcess(const char _name[100], const int _value, const int _min, const int _max)
 {
 	if (m_sliderIntMap.find(_name) != m_sliderIntMap.end()) return;	//‚·‚Å‚É•\Ž¦‚µ‚Ä‚¢‚½‚ç
 
@@ -83,7 +103,7 @@ void ImGuiManager::SetSliderIntProcess(const char _name[100], const int& _value,
 	m_sliderInt[_name] = tmpData;
 }
 
-void ImGuiManager::SetSliderFloatProcess(const char _name[100], const float& _value, const float _min, const float _max)
+void ImGuiManager::SetSliderFloatProcess(const char _name[100], const float _value, const float _min, const float _max)
 {
 	if (m_sliderFloat.find(_name) != m_sliderFloat.end()) 	//‚·‚Å‚É•\Ž¦‚µ‚Ä‚¢‚½‚ç
 	{
@@ -100,7 +120,7 @@ void ImGuiManager::SetSliderFloatProcess(const char _name[100], const float& _va
 	m_sliderFloat[_name] = tmpData;
 }
 
-void ImGuiManager::SetCheckBox(const char _name[100], const bool& _flg)
+void ImGuiManager::SetCheckBox(const char _name[100], const bool _flg)
 {
 	if (m_checkBoxFlgMap.find(_name) != m_checkBoxFlgMap.end()) return;	//‚·‚Å‚É•\Ž¦‚µ‚Ä‚¢‚½‚ç
 
@@ -128,8 +148,6 @@ const bool ImGuiManager::GetSliderBool(const char _name[100])
 
 void ImGuiManager::ChangeImGuiDenote()
 {
-#ifdef DEBUG
-
 	if (GetAsyncKeyState('I') & 0x8000)
 	{
 		ImGuiDenote = true;
@@ -139,8 +157,6 @@ void ImGuiManager::ChangeImGuiDenote()
 	{
 		ImGuiDenote = false;
 	}
-
-#endif // DEBUG
 }
 
 void ImGuiManager::TextIntProcess()
@@ -153,7 +169,7 @@ void ImGuiManager::TextIntProcess()
 
 void ImGuiManager::TextFloatProcess()
 {
-	for (auto iter = m_textfloat.begin(); iter != m_textfloat.end(); ++iter)
+	for (auto iter = m_textFloat.begin(); iter != m_textFloat.end(); ++iter)
 	{
 		ImGui::Text("%s : %f\n", iter->name, iter->value);
 	}

@@ -115,6 +115,27 @@
     <Filter Include="Src\Application\ImGuiManager">
       <UniqueIdentifier>{e96eef7b-c2b6-41b6-b018-699ec8e5e3e4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\Enemy">
+      <UniqueIdentifier>{f684eaf4-95b5-4a35-a37e-0478f28e1a71}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\Enemy\EnemyData">
+      <UniqueIdentifier>{304fa9a8-b00f-4161-b2c2-348d5f75e218}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\Enemy\EnemyData\FireCube">
+      <UniqueIdentifier>{5f27a465-bff2-4022-a745-6d778a619104}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\BattleProcess\CalculateSpeed">
+      <UniqueIdentifier>{386954f6-591b-45fd-8b11-01ff64b32593}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\Manumal\ManumalData\Raibit">
+      <UniqueIdentifier>{bc8dc133-e800-4f06-b0f2-82bbc073069b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\Manumal\ManumalData\Pebrat">
+      <UniqueIdentifier>{fa3c4a12-eb76-40ff-a34c-ab9b573338f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\Enemy\EnemyData\Hinokokko">
+      <UniqueIdentifier>{36ffc85d-1e72-4c63-8d15-d74ede8f6722}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -276,6 +297,24 @@
     <ClInclude Include="Src\Application\ImGuiManager\ImGuiManager.h">
       <Filter>Src\Application\ImGuiManager</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\Enemy\EnemyBase.h">
+      <Filter>Src\Application\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Enemy\FireCube.h">
+      <Filter>Src\Application\Enemy\EnemyData\FireCube</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\BattleProcess\CalculateSpeed\CalculateSpeed.h">
+      <Filter>Src\Application\BattleProcess\CalculateSpeed</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Manumal\Pebrat.h">
+      <Filter>Src\Application\Manumal\ManumalData\Pebrat</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Manumal\Raibit.h">
+      <Filter>Src\Application\Manumal\ManumalData\Raibit</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Enemy\Hinokokko.h">
+      <Filter>Src\Application\Enemy\EnemyData\Hinokokko</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Pch.cpp">
@@ -401,6 +440,22 @@
     <ClCompile Include="Src\Application\ImGuiManager\ImGuiManager.cpp">
       <Filter>Src\Application\ImGuiManager</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Application\Enemy\EnemyBase.cpp">
+      <Filter>Src\Application\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Enemy\FireCube.cpp">
+      <Filter>Src\Application\Enemy\EnemyData\FireCube</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\BattleProcess\CalculateSpeed\CalculateSpeed.cpp">
+      <Filter>Src\Application\BattleProcess\CalculateSpeed</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Manumal\Pebrat.cpp">
+      <Filter>Src\Application\Manumal\ManumalData\Pebrat</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Manumal\Raibit.cpp">
+      <Filter>Src\Application\Manumal\ManumalData\Raibit</Filter>
+    </ClCompile>
+    <ClCompile Include="Hinokokko.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="説明.txt" />

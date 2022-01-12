@@ -5,8 +5,9 @@ Morumon::Morumon()
 	m_data.HP				= 10;
 	m_data.scale			= 50.0f;
 	m_data.attack			= 5.0f;
-	m_data.speed			= 5.0f;
-	m_data.stamina			= 180;
+	m_data.speedRaito		= 1.0f;
+	m_data.stamina			= 150;
+	m_data.nowStamina		= 0;
 	m_data.enemyHitType		= enemyHitType::BOUND;
 	m_data.pos				= Math::Vector2::Zero;
 	m_data.moveVec			= Math::Vector2::Zero;
@@ -20,9 +21,6 @@ Morumon::Morumon()
 
 	SetManumalData(m_data);
 	SetTexData(m_texData);
-
-	IMGUIMANA.SetTextInt("HP", m_data.HP);
-	IMGUIMANA.SetTextFloat("scalse", m_data.scale);
 }
 
 Morumon::~Morumon()

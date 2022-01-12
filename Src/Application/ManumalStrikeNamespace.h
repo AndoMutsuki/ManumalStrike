@@ -30,18 +30,37 @@ namespace ManumalStrikeNamespace
 		int				HP;				//ヒットポイント
 		float			scale;			//半径
 		float			attack;			//攻撃力
-		float			speed;			//速さ
+		float			speedRaito;		//速さ倍率
 		int				stamina;		//減速しだすまでの時間
+		int				nowStamina;		//今のスタミナ
 		enemyHitType	enemyHitType;	//敵と当たった時の挙動の種類
 		Math::Vector2	pos;			//位置
 		Math::Vector2	moveVec;		//進む向き
 		float			ang;			//角度
-		float			nowSpeed;			//進む大きさ
+		float			nowSpeed;		//進む大きさ
 		Math::Matrix	mat;			//行列
 	};
 
-	//マニュマルの画像情報
-	struct manumalTextureData
+	//敵の攻撃の種類
+	enum class enemyAttackType
+	{
+		BEAM,			//ビーム
+		EXPLOSION		//爆発
+	};
+
+
+	//敵の基本情報
+	struct enemyData
+	{
+		int				HP;				//ヒットポイント
+		float			scale;			//半径
+		float			attack;			//攻撃力
+		enemyAttackType attackType;		//攻撃の種類
+		Math::Vector2	pos;			//位置
+	};
+
+	//画像情報
+	struct textureData
 	{
 		KdTexture*			tex;		//画像
 		Math::Rectangle		rec;		//幅、高さなど

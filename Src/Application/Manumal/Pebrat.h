@@ -1,12 +1,12 @@
 #pragma once
 
-class Morumon :public ManumalBase
+class Pebrat :public ManumalBase
 {
 public:
 
-	Morumon();
+	Pebrat();
 
-	~Morumon();
+	~Pebrat();
 
 private:
 

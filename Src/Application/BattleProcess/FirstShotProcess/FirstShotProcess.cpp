@@ -79,18 +79,21 @@ void FirstShotProcess::NoClickProcess()
 	if (!touchedFlg) return;
 
 	//打ち出された瞬間の処理
-	m_keepManumalFlg = false;
+	m_keepManumalFlg	= false;
 	SetManumalFirstShotData();
 }
 
 void FirstShotProcess::SetManumalFirstShotData()
 {
 	//パワーを入れる
-	m_manumalData.nowSpeed = m_arrowSpeed;
+	m_manumalData.nowSpeed = m_arrowSpeed * m_manumalData.speedRaito;
 
 	//角度を入れる
 	float arrowAng		= UNIQUELIBRARY.GetVecAng(m_firstMousePos, Math::Vector2{ m_nowMousePos.x,m_nowMousePos.y });
 	m_manumalData.ang	= -m_arrowAng;
+
+	//スタミナを入れる
+	m_manumalData.nowStamina = m_manumalData.stamina;
 }
 
 void FirstShotProcess::CalculateArrowSpeed()

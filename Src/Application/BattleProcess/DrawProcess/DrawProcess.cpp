@@ -14,6 +14,7 @@ DrawProcess::~DrawProcess()
 
 void DrawProcess::Update()
 {
+	m_battleStatusBarProcess->Update();
 }
 
 void DrawProcess::Draw()
@@ -21,4 +22,9 @@ void DrawProcess::Draw()
 	m_stageDataBase->Draw();
 
 	m_battleStatusBarProcess->Draw();
+}
+
+void DrawProcess::SetHPRaito(const float _HPRaito)
+{
+	m_battleStatusBarProcess->SetHPRaito(_HPRaito);
 }

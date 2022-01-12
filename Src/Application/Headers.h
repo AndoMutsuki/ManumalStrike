@@ -24,21 +24,29 @@ using namespace ManumalStrikeNamespace;
 #include"BattleProcess/DrawProcess/StageDataBase/Stage1/Stage1.h"
 
 //プレイヤーのステータス関係
+#include"BattleProcess/CalculateHP/CalculateHP.h"
 #include"BattleProcess/DrawProcess/BattleStatusBarProcess/BattleStatusBarProcess.h"
 
 //バトルの処理
 #include"BattleProcess/FirstShotProcess/FirstShotProcess.h"
+#include"BattleProcess/CalculateSpeed/CalculateSpeed.h"
 #include"BattleProcess/ReflectorProcess/ReflectorProcess.h"
 #include"BattleProcess/ManumalMutualCollision/ManumalMutualCollision.h"
 #include"BattleProcess/ManumalEnemyCollison/ManumalEnemyCollison.h"
 #include"BattleProcess/HitManumalReflectorProcess/HitManumalReflectorProcess.h"
 #include"BattleProcess/HitManumalwallProcess/HitManumalwallProcess.h"
-#include"BattleProcess/CalculateHP/CalculateHP.h"
 #include"BattleProcess/DrawProcess/DrawProcess.h"
 
-//敵関係
+//マニュマル関係
 #include"Manumal/ManumalBase.h"
 #include"Manumal/Morumon.h"
+#include"Manumal/Raibit.h"
+#include"Manumal/Pebrat.h"
+
+//敵関係
+#include"Enemy/EnemyBase.h"
+#include"Enemy/FireCube.h"
+#include"Enemy/Hinokokko.h"
 
 //シーン関係
 #include "SceneBase/SceneBase.h"
