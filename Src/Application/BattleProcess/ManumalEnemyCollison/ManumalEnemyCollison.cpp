@@ -65,6 +65,6 @@ void ManumalEnemyCollison::CalculateReflecteAng()
 	}
 	else													//è„ÇÃï”
 	{
-		m_movingManumalData.ang = UNIQUELIBRARY.CalculateReflectAng(m_movingManumalData.ang, 90);
+		m_movingManumalData.ang = UNIQUELIBRARY.CalculateReflectAng(m_movingManumalData.ang, 270);
 	}
 }

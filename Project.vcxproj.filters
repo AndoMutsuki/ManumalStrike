@@ -136,6 +136,45 @@
     <Filter Include="Src\Application\Enemy\EnemyData\Hinokokko">
       <UniqueIdentifier>{36ffc85d-1e72-4c63-8d15-d74ede8f6722}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Application\BattleProcess\ManumalAttackCircle">
+      <UniqueIdentifier>{73647e91-d202-4759-baaa-9fcca2a84810}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\EnemyAttack">
+      <UniqueIdentifier>{2cece0ed-5a1c-4508-ab7c-8de410ae8181}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\EnemyAttack\EnemyAttackData">
+      <UniqueIdentifier>{3d5aabee-ef3d-4dcd-9ee7-375c5fecf475}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\EnemyAttack\EnemyAttackData\Explosion">
+      <UniqueIdentifier>{a02aac84-f5e2-4593-925d-702e3a549cbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\EnemyAttack\EnemyAttackData\BigExplosion">
+      <UniqueIdentifier>{fae1ef61-3e96-4eb3-9b18-61e99b7a7733}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\FriendshipCombo">
+      <UniqueIdentifier>{c90c60fb-d546-4841-9dfe-78f3fad65931}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\FriendshipCombo\FriendshipComboData">
+      <UniqueIdentifier>{5546e4cf-2882-4155-8118-cee556351793}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\FriendshipCombo\FriendshipComboData\FriendExplosion">
+      <UniqueIdentifier>{adda39a9-0a9c-4577-8453-a77c034cae81}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\FriendshipCombo\FriendshipComboData\FriendExplosion\FriendExplosion">
+      <UniqueIdentifier>{97f9cd3c-040e-4e33-8851-525be60b823a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\Effect">
+      <UniqueIdentifier>{fa22a1ed-0b27-4d43-9d97-b03a62988c57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\Effect\EffectData">
+      <UniqueIdentifier>{5022703f-a637-4281-a5c6-8ec6b982efe0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\Effect\EffectData\Explosion">
+      <UniqueIdentifier>{8ad871b9-ea03-4799-b535-81bb211f548d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Application\Effect\EffectData\ReflectWall">
+      <UniqueIdentifier>{4a7ba200-2252-46fc-a69b-c921c41dee75}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Pch.h">
@@ -312,8 +351,35 @@
     <ClInclude Include="Src\Application\Manumal\Raibit.h">
       <Filter>Src\Application\Manumal\ManumalData\Raibit</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Application\BattleProcess\ManumalAttackCircle\ManumalAttackCircle.h">
+      <Filter>Src\Application\BattleProcess\ManumalAttackCircle</Filter>
+    </ClInclude>
     <ClInclude Include="Src\Application\Enemy\Hinokokko.h">
       <Filter>Src\Application\Enemy\EnemyData\Hinokokko</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\EnemyAttack\Explosion.h">
+      <Filter>Src\Application\EnemyAttack\EnemyAttackData\Explosion</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\EnemyAttack\EnemyAttackBase.h">
+      <Filter>Src\Application\EnemyAttack\EnemyAttackData</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\EnemyAttack\BigExplosion.h">
+      <Filter>Src\Application\EnemyAttack\EnemyAttackData\BigExplosion</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\FriendshipCombo\FriendshipComboBase.h">
+      <Filter>Src\Application\FriendshipCombo</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\FriendshipCombo\FriendExplosion.h">
+      <Filter>Src\Application\FriendshipCombo\FriendshipComboData\FriendExplosion\FriendExplosion</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Effect\EffectBase.h">
+      <Filter>Src\Application\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Effect\ExplosionEffect.h">
+      <Filter>Src\Application\Effect\EffectData\Explosion</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Application\Effect\ReflectWallEffect.h">
+      <Filter>Src\Application\Effect\EffectData\ReflectWall</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -455,7 +521,36 @@
     <ClCompile Include="Src\Application\Manumal\Raibit.cpp">
       <Filter>Src\Application\Manumal\ManumalData\Raibit</Filter>
     </ClCompile>
-    <ClCompile Include="Hinokokko.cpp" />
+    <ClCompile Include="Src\Application\BattleProcess\ManumalAttackCircle\ManumalAttackCircle.cpp">
+      <Filter>Src\Application\BattleProcess\ManumalAttackCircle</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Enemy\Hinokokko.cpp">
+      <Filter>Src\Application\Enemy\EnemyData\Hinokokko</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\EnemyAttack\Explosion.cpp">
+      <Filter>Src\Application\EnemyAttack\EnemyAttackData\Explosion</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\EnemyAttack\EnemyAttackBase.cpp">
+      <Filter>Src\Application\EnemyAttack\EnemyAttackData</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\EnemyAttack\BigExplosion.cpp">
+      <Filter>Src\Application\EnemyAttack\EnemyAttackData\BigExplosion</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\FriendshipCombo\FriendshipComboBase.cpp">
+      <Filter>Src\Application\FriendshipCombo</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\FriendshipCombo\FriendExplosion.cpp">
+      <Filter>Src\Application\FriendshipCombo\FriendshipComboData\FriendExplosion\FriendExplosion</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Effect\EffectBase.cpp">
+      <Filter>Src\Application\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Effect\ExplosionEffect.cpp">
+      <Filter>Src\Application\Effect\EffectData\Explosion</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Application\Effect\ReflectWallEffect.cpp">
+      <Filter>Src\Application\Effect\EffectData\ReflectWall</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="説明.txt" />

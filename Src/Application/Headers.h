@@ -36,6 +36,7 @@ using namespace ManumalStrikeNamespace;
 #include"BattleProcess/HitManumalReflectorProcess/HitManumalReflectorProcess.h"
 #include"BattleProcess/HitManumalwallProcess/HitManumalwallProcess.h"
 #include"BattleProcess/DrawProcess/DrawProcess.h"
+#include"BattleProcess/ManumalAttackCircle/ManumalAttackCircle.h"
 
 //マニュマル関係
 #include"Manumal/ManumalBase.h"
@@ -47,6 +48,20 @@ using namespace ManumalStrikeNamespace;
 #include"Enemy/EnemyBase.h"
 #include"Enemy/FireCube.h"
 #include"Enemy/Hinokokko.h"
+
+//友情コンボ
+#include"FriendshipCombo/FriendshipComboBase.h"
+#include"FriendshipCombo/FriendExplosion.h"
+
+//敵の攻撃
+#include"EnemyAttack/EnemyAttackBase.h"
+#include"EnemyAttack/Explosion.h"
+#include"EnemyAttack/BigExplosion.h"
+
+//エフェクト関係
+#include"Effect/EffectBase.h"
+#include"Effect/ReflectWallEffect.h"
+#include"Effect/ExplosionEffect.h"
 
 //シーン関係
 #include "SceneBase/SceneBase.h"

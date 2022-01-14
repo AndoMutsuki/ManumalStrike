@@ -12,13 +12,16 @@ BattleScene::BattleScene()
 	m_calculateHP = new CalculateHP;
 	m_calculateSpeed = new CalculateSpeed;
 	m_drawProcess = new DrawProcess;
+	m_manumalAttackCircle = new ManumalAttackCircle;
+
 	m_manumalList.clear();
 	m_manumalList.push_back(new Raibit);
 	m_manumalList.push_back(new Morumon);
 	m_manumalList.push_back(new Pebrat);
 	m_manumalList[0]->SetPos({ -200,-100 });
 	m_manumalList[1]->SetPos({ 0,-120 });
-	m_manumalList[2]->SetPos({ 200,-100 });
+	//m_manumalList[2]->SetPos({ 200,-100 });
+	m_manumalList[2]->SetPos({ -350,230 });
 	m_enemyList.clear();
 	m_enemyList.push_back(new FireCube);
 	m_enemyList.push_back(new FireCube);
@@ -26,6 +29,7 @@ BattleScene::BattleScene()
 	m_enemyList[0]->SetEnemyPos({ -400,250 });
 	m_enemyList[1]->SetEnemyPos({ 350,100 });
 	m_enemyList[2]->SetEnemyPos({ 0,120 });
+	m_effectList.clear();
 
 	//最大HPを計算
 	int HPMax = std::accumulate(m_manumalList.begin(), m_manumalList.end(), 0,
@@ -35,11 +39,6 @@ BattleScene::BattleScene()
 	//マニュマル関係
 	m_nowMoveManumalNum = 0;
 	m_shotedFlg = false;
-
-	//エフェクシア
-	m_effect = *(EFFEKSEER.GetEffect(uR"(Data/Effect/reflectWall/reflectWall.efk)"));
-	m_handle = 0;
-	m_effectFlg = false;
 
 	//マウス
 	m_baseMousePos = { 1280 / 2, 720 / 2 };
@@ -57,17 +56,50 @@ BattleScene::~BattleScene()
 	delete m_hitManumalwallProcess;
 	delete m_hitManumalReflectorProcess;
 	delete m_drawProcess;
+	delete m_manumalAttackCircle;
+
+	for (auto iter = m_manumalList.begin(); iter != m_manumalList.end(); ++iter)
+	{
+		delete *iter;
+	}
 	m_manumalList.clear();
+
+	for (auto iter = m_enemyList.begin(); iter != m_enemyList.end(); ++iter)
+	{
+		delete* iter;
+	}
+	m_enemyList.clear();
+
+	for (auto iter = m_effectList.begin(); iter != m_effectList.end(); ++iter)
+	{
+		delete* iter;
+	}
+	m_effectList.clear();
 }
 
 void BattleScene::Update()
 {
 	m_mousePos = m_mouseProcess->Update(m_mousePos);
 
+	//HPの計算
+	m_calculateHP->Update();
+	if (!m_calculateHP->GetAliveFlg())
+	{
+		m_drawProcess->SetHPRaito(m_calculateHP->GetHPRaito());
+		m_drawProcess->Update();
+		return;
+	}
+
 	//打ち出されたらフラグを立てる
 	if (m_firstShotProcess->DoCalculateArrowMat() && !GetAsyncKeyState(MK_LBUTTON))
 	{
 		m_shotedFlg = true;
+	}
+
+	//打ち出せるマニュマルを示す
+	if (!m_shotedFlg)
+	{
+		m_manumalAttackCircle->Update(m_manumalList[m_nowMoveManumalNum]->GetManumalData());
 	}
 
 	//最初に打ち出す処理
@@ -93,12 +125,39 @@ void BattleScene::Update()
 	//次のマニュマルの発射に移る
 	if (m_shotedFlg && m_allManumalStopFlg)
 	{
+		for (auto iter = m_manumalList.begin(); iter != m_manumalList.end(); ++iter)
+		{
+			(*iter)->GetManumalDataKinetic().frendFlg = false;
+		}
+
+		for (auto iter = m_enemyList.begin(); iter != m_enemyList.end(); ++iter)
+		{
+			if (!(*iter)->GetAliveFlg())continue;
+
+			(*iter)->GetEnemyDataKinetic().nowAttackTurn--;
+
+			if ((*iter)->GetEnemyDataKinetic().nowAttackTurn != 0)continue;
+
+			(*iter)->GetEnemyDataKinetic().nowAttackTurn = (*iter)->GetEnemyData().attackTurn;
+
+			SetEnemyAttack((*iter)->GetEnemyData().attackType, (*iter)->GetEnemyData().pos);
+			if (m_enemyAttack != nullptr)
+			{
+				m_enemyAttack->Update((*iter)->GetEnemyDataKinetic(), m_manumalList);
+				m_calculateHP->SetDamage(m_enemyAttack->GetDamage());
+			}
+			delete m_enemyAttack;
+			m_enemyAttack = nullptr;
+		}
+
 		m_shotedFlg = false;
+		m_manumalAttackCircle->Init();
 		m_nowMoveManumalNum++;
 		if (m_nowMoveManumalNum >= m_nowMoveManumalNumMax)
 		{
 			m_nowMoveManumalNum = 0;
 		}
+		m_manumalAttackCircle->Update(m_manumalList[m_nowMoveManumalNum]->GetManumalData());
 		return;
 	}
 
@@ -116,6 +175,18 @@ void BattleScene::Update()
 		{
 			std::for_each(m_manumalList.begin(), m_manumalList.end(),
 				std::mem_fun(&ManumalBase::CalculateMoveVec));
+
+			if ((*iter)->GetManumalData().frendFlg)continue;
+
+			(*iter)->GetManumalDataKinetic().frendFlg = true;
+
+			SetFriendshipCombo((*iter)->GetManumalData().frendshipType, (*iter)->GetManumalData().pos);
+			if (m_frendshipCombo != nullptr)
+			{
+				m_frendshipCombo->Update((*iter)->GetManumalDataKinetic(), m_enemyList);
+			}
+			delete m_frendshipCombo;
+			m_frendshipCombo = nullptr;
 		}
 	}
 
@@ -141,19 +212,19 @@ void BattleScene::Update()
 	{
 		for (auto iterE = m_enemyList.begin(); iterE != m_enemyList.end(); ++iterE)
 		{
+			if (!(*iterE)->GetAliveFlg())continue;
+
 			m_manumalEnemyCollison->Update((*iter)->GetManumalDataKinetic(), (*iterE)->GetEnemyData());
 			if (m_manumalEnemyCollison->GetHitManumalEnemyFlg())
 			{
 				(*iter)->CalculateMoveVec();
+
+				if (m_manumalList[m_nowMoveManumalNum] == *iter)
+				{
+					(*iterE)->SetDamage((int)(*iter)->GetManumalData().attack);
+				}
 			}
 		}
-	}
-
-	//HPの計算
-	m_calculateHP->Update();
-	if (!m_calculateHP->GetAliveFlg())
-	{
-		return;
 	}
 
 	//反射板で跳ね返る処理
@@ -185,6 +256,19 @@ void BattleScene::Update()
 
 	//UI関係の処理
 	m_drawProcess->Update();
+
+	//エフェクト関係
+	std::for_each(m_effectList.begin(), m_effectList.end(),
+		std::mem_fun(&EffectBase::Update));
+
+	for (UINT i = 0; i < m_effectList.size(); i++)
+	{
+		if (m_effectList[i]->GetEffectFinishFlg())
+		{
+			delete m_effectList[i];
+			m_effectList = UNIQUELIBRARY.DeleteList(i, m_effectList);
+		}
+	}
 }
 
 void BattleScene::Draw2D()
@@ -193,11 +277,20 @@ void BattleScene::Draw2D()
 
 	m_drawProcess->Draw();
 
+	if (!m_shotedFlg)
+	{
+		m_manumalAttackCircle->Draw();
+	}
+
+	for (auto iter = m_enemyList.begin(); iter != m_enemyList.end(); ++iter)
+	{
+		if (!(*iter)->GetAliveFlg())continue;
+
+		(*iter)->Draw();
+	}
+
 	std::for_each(m_manumalList.begin(), m_manumalList.end(),
 		std::mem_fun(&ManumalBase::Draw));
-
-	std::for_each(m_enemyList.begin(), m_enemyList.end(),
-		std::mem_fun(&EnemyBase::Draw));
 
 	m_reflectorProcess->Draw();
 
@@ -206,35 +299,57 @@ void BattleScene::Draw2D()
 		m_firstShotProcess->DrawArrow();
 	}
 
-	EffectDraw();
+	std::for_each(m_effectList.begin(), m_effectList.end(),
+		std::mem_fun(&EffectBase::Draw));
 
 	SHADER.m_spriteShader.End();
 }
 
-void BattleScene::EffectDraw()
+void BattleScene::SetFriendshipCombo(frendshipComboType _frendshipComboType, const Math::Vector2& _pos)
 {
-	if (!m_effectFlg)
+	switch (_frendshipComboType)
 	{
-		// エフェクトの再生
-		m_handle = EFFEKSEER.GetManager()->Play(m_effect, 0, 0, 0);
-		m_effectFlg = true;
+	case frendshipComboType::BEAM:
+		m_enemyAttack = nullptr;
+		break;
+
+	case frendshipComboType::EXPLOSION:
+		m_frendshipCombo = new FriendExplosion;
+		m_effectList.push_back(new ExplosionEffect);
+		break;
+
+	default:
+		m_enemyAttack = nullptr;
+		assert(!"敵の攻撃タイプに不正な値");
+		break;
 	}
 
-	// エフェクトの移動
-	//EFFEKSEER.GetManager()->AddLocation(m_handle, ::Effekseer::Vector3D(0.2f, 0.0f, 0.0f));
+	m_effectList[m_effectList.size() - 1]->Init(_pos, m_frendshipCombo->GetRange());
+}
 
-	//EFFEKSEER.GetManager()->SetRotation(m_handle, 0,0,0);
-	//EFFEKSEER.GetManager()->SetRotation(m_handle, {0,1,0}, 270);
+void BattleScene::SetEnemyAttack(enemyAttackType _enemyAttackType, const Math::Vector2& _pos)
+{
+	switch (_enemyAttackType)
+	{
+	case enemyAttackType::BEAM:
+		m_enemyAttack = nullptr;
+		break;
 
-	// マネージャーの更新
-	EFFEKSEER.GetManager()->Update();
+	case enemyAttackType::EXPLOSION:
+		m_enemyAttack = new Explosion;
+		m_effectList.push_back(new ExplosionEffect);
+		break;
 
-	// エフェクトの描画開始処理を行う。
-	EFFEKSEER.GetRenderer()->BeginRendering();
+	case enemyAttackType::BIGEXPLOSION:
+		m_enemyAttack = new BigExplosion;
+		m_effectList.push_back(new ExplosionEffect);
+		break;
 
-	// エフェクトの描画を行う。
-	EFFEKSEER.GetManager()->Draw();
+	default:
+		m_frendshipCombo = nullptr;
+		assert(!"敵の攻撃タイプに不正な値");
+		break;
+	}
 
-	// エフェクトの描画終了処理を行う。
-	EFFEKSEER.GetRenderer()->EndRendering();
+	m_effectList[m_effectList.size() - 1]->Init(_pos, m_enemyAttack->GetRange());
 }

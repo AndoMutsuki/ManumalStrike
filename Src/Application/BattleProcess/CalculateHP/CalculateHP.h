@@ -13,6 +13,9 @@ public:
 	//最大HPをセット
 	void SetHPMax(const int _HPMax);
 
+	//ダメージをセット
+	void SetDamage(const int _damage);
+
 	//HPの割合を渡す
 	const float GetHPRaito()const;
 

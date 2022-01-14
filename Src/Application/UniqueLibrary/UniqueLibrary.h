@@ -36,6 +36,10 @@ public:
 	//”½Ë‚µ‚½Œã‚ÌˆÊ’u
 	const float CalculateReflectAng(const float& _standardAng, const float& _objectAng);
 
+	//‰Â•Ï’·”z—ñ‚Ì—v‘f‚Ìíœ
+	template<typename T>
+	const T DeleteList(const int _num, const T _list);
+
 private:
 
 	UniqueLibrary() {}
@@ -63,3 +67,16 @@ inline T UniqueLibrary::AdjustmentLowerLimit(T _value, T _valueMin)
 	}
 	return _value;
 }
+
+template<typename T>
+inline const T UniqueLibrary::DeleteList(const int _num, const T _list)
+{
+	T list = _list;
+	for (UINT i = _num; i < list.size() - 1; i++)
+	{
+		list[i] = list[i + 1];
+	}
+	list.erase(list.begin() + list.size() - 1);
+	return list;
+}
+

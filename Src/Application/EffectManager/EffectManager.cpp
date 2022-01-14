@@ -39,7 +39,7 @@ void EffectManager::Init()
     m_manager->SetMaterialLoader(m_renderer->CreateMaterialLoader());
     m_manager->SetCurveLoader(Effekseer::MakeRefPtr<Effekseer::CurveLoader>());
 
-    auto g_position = ::Effekseer::Vector3D(10.0f, 5.0f, 20.0f);
+    auto g_position = ::Effekseer::Vector3D(0, 0, 20.0f);
 
     // “Š‰es—ñ‚ğİ’è
     m_renderer->SetProjectionMatrix(::Effekseer::Matrix44().PerspectiveFovRH(
@@ -60,23 +60,23 @@ const Effekseer::ManagerRef& EffectManager::GetManager() const
     return m_manager;
 }
 
-const std::shared_ptr<Effekseer::EffectRef> EffectManager::GetEffect(const char16_t* _fileName)
+const std::shared_ptr<Effekseer::EffectRef> EffectManager::GetEffect(const std::string _fileName, const char16_t* _effect)
 {
     std::shared_ptr<Effekseer::EffectRef> tmpEffect = nullptr;
 
-    if (m_effectList.find((std::string)"_fileName") == m_effectList.end())
+    if (m_effectList.find(_fileName) == m_effectList.end())
     {
         //‰‚ß‚Ä“Ç‚İ‚Ü‚ê‚Ä‚¢‚½‚ç
         tmpEffect   = std::make_shared<Effekseer::EffectRef>();
-        *tmpEffect  = Effekseer::Effect::Create(EFFEKSEER.GetManager(), _fileName);
+        *tmpEffect  = Effekseer::Effect::Create(EFFEKSEER.GetManager(), _effect);
 
-        m_effectList[(std::string)"_fileName"] = tmpEffect;
+        m_effectList[_fileName] = tmpEffect;
     }
     else
     {
         //‚·‚Å‚É“Ç‚İ‚Ü‚ê‚Ä‚¢‚½‚ç 
-        return m_effectList[(std::string)"_fileName"];
+        tmpEffect = m_effectList[_fileName];
     }
 
-    return m_effectList[(std::string)"_fileName"];
+    return tmpEffect;
 }

@@ -2,7 +2,7 @@
 
 Morumon::Morumon()
 {
-	m_data.HP				= 10;
+	m_data.HP				= 300;
 	m_data.scale			= 50.0f;
 	m_data.attack			= 5.0f;
 	m_data.speedRaito		= 1.0f;
@@ -14,6 +14,8 @@ Morumon::Morumon()
 	m_data.ang				= 0;
 	m_data.nowSpeed			= 0;
 	m_data.mat				= Math::Matrix::Identity;
+	m_data.frendshipType	= frendshipComboType::EXPLOSION;
+	m_data.frendFlg			= false;
 
 	m_texData.tex	= TEXMANA.GetTex("Data/Texture/Manumal/morumon.png");
 	m_texData.rec	= { 0,0,100,100 };

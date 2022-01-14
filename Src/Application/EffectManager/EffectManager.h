@@ -13,7 +13,7 @@ public:
 	const Effekseer::ManagerRef& GetManager()const;
 
 	//フライウェイトパターンでエフェクトをとってくる
-	const std::shared_ptr<Effekseer::EffectRef> GetEffect(const char16_t* _fileName);
+	const std::shared_ptr<Effekseer::EffectRef> GetEffect(const std::string _fileName, const char16_t* _effect);
 
 	static EffectManager& GetInstance()
 	{

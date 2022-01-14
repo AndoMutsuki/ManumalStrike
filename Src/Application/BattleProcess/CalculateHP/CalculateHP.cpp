@@ -21,6 +21,11 @@ void CalculateHP::SetHPMax(const int _HPMax)
 	m_HPMax = _HPMax;
 }
 
+void CalculateHP::SetDamage(const int _damage)
+{
+	m_damage += _damage;
+}
+
 const float CalculateHP::GetHPRaito() const
 {
 	return m_HPRaito;

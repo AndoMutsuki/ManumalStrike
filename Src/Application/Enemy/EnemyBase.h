@@ -13,6 +13,12 @@ public:
 	//敵の位置をセット
 	void SetEnemyPos(const Math::Vector2& _pos);
 
+	//ダメージをくらう
+	void SetDamage(const int _damage);
+
+	//生きているかのフラグ
+	const bool GetAliveFlg();
+
 	//敵のデータを派生クラスで入力
 	void SetEnemyData(const enemyData& _enemyData);
 

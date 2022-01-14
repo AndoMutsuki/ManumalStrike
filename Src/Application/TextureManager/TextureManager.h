@@ -13,7 +13,7 @@ public:
 
 	~TexManager();
 
-	KdTexture* GetTex(const std::string& _file_name);
+	KdTexture* GetTex(const std::string& _fileName);
 
 private:
 

@@ -65,5 +65,5 @@ void HitManumalWallProcess::HitTopWallProcess()
 void HitManumalWallProcess::HitBottomWallProcess()
 {
 	m_manumalData.pos.y = UNIQUELIBRARY.CalculateReflectPos(m_manumalData.pos.y, (float)(Bottom + m_manumalData.scale));
-	m_manumalData.ang	= UNIQUELIBRARY.CalculateReflectAng(m_manumalData.ang, 90);
+	m_manumalData.ang	= UNIQUELIBRARY.CalculateReflectAng(m_manumalData.ang, 270);
 }

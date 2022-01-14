@@ -22,6 +22,16 @@ void EnemyBase::SetEnemyPos(const Math::Vector2& _pos)
 	m_enemyData.pos = _pos;
 }
 
+void EnemyBase::SetDamage(const int _damage)
+{
+	m_enemyData.HP -= _damage;
+}
+
+const bool EnemyBase::GetAliveFlg()
+{
+	return m_enemyData.HP > 0 ? true : false;
+}
+
 void EnemyBase::SetEnemyData(const enemyData& _enemyData)
 {
 	m_enemyData = _enemyData;
