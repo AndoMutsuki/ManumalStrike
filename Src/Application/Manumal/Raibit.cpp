@@ -15,7 +15,7 @@ Raibit::Raibit()
 	m_data.nowSpeed			= 0;
 	m_data.mat				= Math::Matrix::Identity;
 	m_data.frendshipType	= frendshipComboType::EXPLOSION;
-	m_data.frendFlg			= false;
+	m_data.friendFinishFlg			= false;
 
 	m_texData.tex		= TEXMANA.GetTex("Data/Texture/Manumal/raibit.png");
 	m_texData.rec		= { 0,0,100,100 };

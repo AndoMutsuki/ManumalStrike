@@ -12,7 +12,7 @@ public:
 	//動いているマニュマルのデータと、ぶつかったマニュマルのデータをセット
 	void Update(const manumalData& _movingManumalData, manumalData& _hitedManumalData);
 
-	const bool GetmHitManumalMutualFlg()const;
+	const bool GetHitManumalMutualFlg()const;
 
 private:
 

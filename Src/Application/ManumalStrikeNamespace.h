@@ -27,20 +27,20 @@ namespace ManumalStrikeNamespace
 	//マニュマルの基本情報
 	struct manumalData
 	{
-		int				HP;				//ヒットポイント
-		float			scale;			//半径
-		float			attack;			//攻撃力
-		float			speedRaito;		//速さ倍率
-		int				stamina;		//減速しだすまでの時間
-		int				nowStamina;		//今のスタミナ
-		enemyHitType	enemyHitType;	//敵と当たった時の挙動の種類
-		Math::Vector2	pos;			//位置
-		Math::Vector2	moveVec;		//進む向き
-		float			ang;			//角度
-		float			nowSpeed;		//進む大きさ
-		Math::Matrix	mat;			//行列
+		int					HP;				//ヒットポイント
+		float				scale;			//半径
+		float				attack;			//攻撃力
+		float				speedRaito;		//速さ倍率
+		int					stamina;		//減速しだすまでの時間
+		int					nowStamina;		//今のスタミナ
+		enemyHitType		enemyHitType;	//敵と当たった時の挙動の種類
+		Math::Vector2		pos;			//位置
+		Math::Vector2		moveVec;		//進む向き
+		float				ang;			//角度
+		float				nowSpeed;		//進む大きさ
+		Math::Matrix		mat;			//行列
 		frendshipComboType	frendshipType;	//友情コンボのタイプ
-		bool			frendFlg;		//友情コンボフラグ
+		bool				friendFinishFlg;//友情コンボフラグ
 	};
 
 	//友情コンボの基本情報

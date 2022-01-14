@@ -24,7 +24,7 @@ void ManumalMutualCollision::Update(const manumalData& _movingManumalData, manum
 	_hitedManumalData = m_hitedManumalData;
 }
 
-const bool ManumalMutualCollision::GetmHitManumalMutualFlg() const
+const bool ManumalMutualCollision::GetHitManumalMutualFlg() const
 {
 	return m_hitManumalMutualFlg;
 }

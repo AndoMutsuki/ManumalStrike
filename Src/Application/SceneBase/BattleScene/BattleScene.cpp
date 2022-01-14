@@ -60,7 +60,7 @@ BattleScene::~BattleScene()
 
 	for (auto iter = m_manumalList.begin(); iter != m_manumalList.end(); ++iter)
 	{
-		delete *iter;
+		delete* iter;
 	}
 	m_manumalList.clear();
 
@@ -79,35 +79,28 @@ BattleScene::~BattleScene()
 
 void BattleScene::Update()
 {
+	//マウスの処理
 	m_mousePos = m_mouseProcess->Update(m_mousePos);
 
-	//HPの計算
-	m_calculateHP->Update();
-	if (!m_calculateHP->GetAliveFlg())
-	{
-		m_drawProcess->SetHPRaito(m_calculateHP->GetHPRaito());
-		m_drawProcess->Update();
-		return;
-	}
+	//HPの処理
+	bool aliveFlg = HPProcess();	//プレイヤーが生きているかのフラグ
+	if (!aliveFlg)return;			//死んでいたら早期リターン
 
-	//打ち出されたらフラグを立てる
-	if (m_firstShotProcess->DoCalculateArrowMat() && !GetAsyncKeyState(MK_LBUTTON))
+	//マニュマルが打ち出されたらフラグを立てる
+	bool shotFlg = m_firstShotProcess->DoCalculateArrowMat() && !GetAsyncKeyState(MK_LBUTTON);
+	if (shotFlg)
 	{
 		m_shotedFlg = true;
 	}
 
-	//打ち出せるマニュマルを示す
+	//打ち出せるマニュマルに円のエフェクトを付ける
 	if (!m_shotedFlg)
 	{
 		m_manumalAttackCircle->Update(m_manumalList[m_nowMoveManumalNum]->GetManumalData());
 	}
 
 	//最初に打ち出す処理
-	if (m_manumalList[m_nowMoveManumalNum]->GetManumalData().nowSpeed <= 0)
-	{
-		m_firstShotProcess->Update(m_manumalList[m_nowMoveManumalNum]->GetManumalDataKinetic(), m_mousePos);
-		m_manumalList[m_nowMoveManumalNum]->CalculateMoveVec();
-	}
+	FirstShotProcessBattleScene();
 
 	//反射板の処理
 	m_reflectorProcess->Update(m_firstShotProcess->GetClickFlg());
@@ -123,129 +116,23 @@ void BattleScene::Update()
 		[](ManumalBase* manumalBase) {return manumalBase->GetManumalData().nowSpeed <= 0; });
 
 	//次のマニュマルの発射に移る
-	if (m_shotedFlg && m_allManumalStopFlg)
-	{
-		for (auto iter = m_manumalList.begin(); iter != m_manumalList.end(); ++iter)
-		{
-			(*iter)->GetManumalDataKinetic().frendFlg = false;
-		}
-
-		for (auto iter = m_enemyList.begin(); iter != m_enemyList.end(); ++iter)
-		{
-			if (!(*iter)->GetAliveFlg())continue;
-
-			(*iter)->GetEnemyDataKinetic().nowAttackTurn--;
-
-			if ((*iter)->GetEnemyDataKinetic().nowAttackTurn != 0)continue;
-
-			(*iter)->GetEnemyDataKinetic().nowAttackTurn = (*iter)->GetEnemyData().attackTurn;
-
-			SetEnemyAttack((*iter)->GetEnemyData().attackType, (*iter)->GetEnemyData().pos);
-			if (m_enemyAttack != nullptr)
-			{
-				m_enemyAttack->Update((*iter)->GetEnemyDataKinetic(), m_manumalList);
-				m_calculateHP->SetDamage(m_enemyAttack->GetDamage());
-			}
-			delete m_enemyAttack;
-			m_enemyAttack = nullptr;
-		}
-
-		m_shotedFlg = false;
-		m_manumalAttackCircle->Init();
-		m_nowMoveManumalNum++;
-		if (m_nowMoveManumalNum >= m_nowMoveManumalNumMax)
-		{
-			m_nowMoveManumalNum = 0;
-		}
-		m_manumalAttackCircle->Update(m_manumalList[m_nowMoveManumalNum]->GetManumalData());
-		return;
-	}
+	NextManumalProcess();
 
 	//マニュマルの移動処理
 	std::for_each(m_manumalList.begin(), m_manumalList.end(),
 		std::mem_fun(&ManumalBase::MoveProcess));
 
 	//マニュマル同士の当たり判定
-	for (auto iter = m_manumalList.begin(); iter != m_manumalList.end(); ++iter)
-	{
-		if (m_manumalList[m_nowMoveManumalNum] == *iter)continue;
-
-		m_manumalMutualCollision->Update(m_manumalList[m_nowMoveManumalNum]->GetManumalData(), (*iter)->GetManumalDataKinetic());
-		if (m_manumalMutualCollision->GetmHitManumalMutualFlg())
-		{
-			std::for_each(m_manumalList.begin(), m_manumalList.end(),
-				std::mem_fun(&ManumalBase::CalculateMoveVec));
-
-			if ((*iter)->GetManumalData().frendFlg)continue;
-
-			(*iter)->GetManumalDataKinetic().frendFlg = true;
-
-			SetFriendshipCombo((*iter)->GetManumalData().frendshipType, (*iter)->GetManumalData().pos);
-			if (m_frendshipCombo != nullptr)
-			{
-				m_frendshipCombo->Update((*iter)->GetManumalDataKinetic(), m_enemyList);
-			}
-			delete m_frendshipCombo;
-			m_frendshipCombo = nullptr;
-		}
-	}
-
-	for (auto iter = m_manumalList.begin(); iter != m_manumalList.end(); ++iter)
-	{
-		for (auto iter2 = m_manumalList.begin(); iter2 != m_manumalList.end(); ++iter2)
-		{
-			if (m_manumalList[m_nowMoveManumalNum] == *iter)continue;
-			if (m_manumalList[m_nowMoveManumalNum] == *iter2)continue;
-			if (iter == iter2)continue;
-
-			m_manumalMutualCollision->Update((*iter)->GetManumalDataKinetic(), (*iter2)->GetManumalDataKinetic());
-			if (m_manumalMutualCollision->GetmHitManumalMutualFlg())
-			{
-				(*iter)->CalculateMoveVec();
-				(*iter2)->CalculateMoveVec();
-			}
-		}
-	}
+	ManumalMutualCollisionProcess();
 
 	//マニュマルと敵の当たり判定
-	for (auto iter = m_manumalList.begin(); iter != m_manumalList.end(); ++iter)
-	{
-		for (auto iterE = m_enemyList.begin(); iterE != m_enemyList.end(); ++iterE)
-		{
-			if (!(*iterE)->GetAliveFlg())continue;
-
-			m_manumalEnemyCollison->Update((*iter)->GetManumalDataKinetic(), (*iterE)->GetEnemyData());
-			if (m_manumalEnemyCollison->GetHitManumalEnemyFlg())
-			{
-				(*iter)->CalculateMoveVec();
-
-				if (m_manumalList[m_nowMoveManumalNum] == *iter)
-				{
-					(*iterE)->SetDamage((int)(*iter)->GetManumalData().attack);
-				}
-			}
-		}
-	}
+	ManumalEnemyCollisonProcess();
 
 	//反射板で跳ね返る処理
-	for (auto iter = m_manumalList.begin(); iter != m_manumalList.end(); ++iter)
-	{
-		m_hitManumalReflectorProcess->Update((*iter)->GetManumalDataKinetic(), m_reflectorProcess);
-		if (m_hitManumalReflectorProcess->GetHitReflectorFlg())
-		{
-			(*iter)->CalculateMoveVec();
-		}
-	}
+	HitManumalReflectorProcessBattleScene();
 
 	//壁で跳ね返る処理
-	for (auto iter = m_manumalList.begin(); iter != m_manumalList.end(); ++iter)
-	{
-		m_hitManumalwallProcess->Update((*iter)->GetManumalDataKinetic());
-		if (m_hitManumalwallProcess->GetHitWallFlg())
-		{
-			(*iter)->CalculateMoveVec();
-		}
-	}
+	HitManumalwallProcessBattleScene();
 
 	//マニュマルの行列の計算
 	std::for_each(m_manumalList.begin(), m_manumalList.end(),
@@ -258,17 +145,7 @@ void BattleScene::Update()
 	m_drawProcess->Update();
 
 	//エフェクト関係
-	std::for_each(m_effectList.begin(), m_effectList.end(),
-		std::mem_fun(&EffectBase::Update));
-
-	for (UINT i = 0; i < m_effectList.size(); i++)
-	{
-		if (m_effectList[i]->GetEffectFinishFlg())
-		{
-			delete m_effectList[i];
-			m_effectList = UNIQUELIBRARY.DeleteList(i, m_effectList);
-		}
-	}
+	EffectProcess();
 }
 
 void BattleScene::Draw2D()
@@ -305,26 +182,90 @@ void BattleScene::Draw2D()
 	SHADER.m_spriteShader.End();
 }
 
-void BattleScene::SetFriendshipCombo(frendshipComboType _frendshipComboType, const Math::Vector2& _pos)
+const bool BattleScene::HPProcess()
 {
-	switch (_frendshipComboType)
+	m_calculateHP->Update();
+	if (!m_calculateHP->GetAliveFlg())
 	{
-	case frendshipComboType::BEAM:
-		m_enemyAttack = nullptr;
-		break;
-
-	case frendshipComboType::EXPLOSION:
-		m_frendshipCombo = new FriendExplosion;
-		m_effectList.push_back(new ExplosionEffect);
-		break;
-
-	default:
-		m_enemyAttack = nullptr;
-		assert(!"敵の攻撃タイプに不正な値");
-		break;
+		CalculateHPDeath();
+		return false;
 	}
 
-	m_effectList[m_effectList.size() - 1]->Init(_pos, m_frendshipCombo->GetRange());
+	return true;
+}
+
+void BattleScene::CalculateHPDeath()
+{
+	m_drawProcess->SetHPRaito(m_calculateHP->GetHPRaito());
+	m_drawProcess->Update();
+}
+
+void BattleScene::FirstShotProcessBattleScene()
+{
+	bool moveFlg = m_manumalList[m_nowMoveManumalNum]->GetManumalData().nowSpeed > 0;	//打ち出すマニュマルが動いているか
+
+	//マニュマルが止まっていたら
+	if (!moveFlg)
+	{
+		//最初に打ち出す処理
+		m_firstShotProcess->Update(m_manumalList[m_nowMoveManumalNum]->GetManumalDataKinetic(), m_mousePos);
+
+		//ベクトルの計算
+		m_manumalList[m_nowMoveManumalNum]->CalculateMoveVec();
+	}
+}
+
+void BattleScene::NextManumalProcess()
+{
+	bool nextManumalFlg = m_shotedFlg && m_allManumalStopFlg;
+	if (!nextManumalFlg)return;
+
+	m_shotedFlg = false;
+
+	//友情コンボ終了のフラグをきる
+	for (auto iter = m_manumalList.begin(); iter != m_manumalList.end(); ++iter)
+	{
+		(*iter)->GetManumalDataKinetic().friendFinishFlg = false;
+	}
+
+	//敵の攻撃の処理
+	EnemyAttackProcess();
+
+	//打ち出すマニュマルの円のエフェクトの処理
+	ShotCircleProcess();
+
+	return;
+}
+
+void BattleScene::EnemyAttackProcess()
+{
+	for (auto iter = m_enemyList.begin(); iter != m_enemyList.end(); ++iter)
+	{
+		//敵が死んでいたらぬける
+		if (!(*iter)->GetAliveFlg())continue;
+
+		//攻撃のターン数を減らす
+		(*iter)->GetEnemyDataKinetic().nowAttackTurn--;
+
+		//まだ攻撃するターン数ではない場合ぬける
+		if ((*iter)->GetEnemyDataKinetic().nowAttackTurn != 0)continue;
+
+		//ターン数を最大値に戻す
+		(*iter)->GetEnemyDataKinetic().nowAttackTurn = (*iter)->GetEnemyData().attackTurn;
+
+		//敵の攻撃をセットする
+		SetEnemyAttack((*iter)->GetEnemyData().attackType, (*iter)->GetEnemyData().pos);
+		if (m_enemyAttack != nullptr)
+		{
+			//ダメージを算出する
+			m_enemyAttack->Update((*iter)->GetEnemyDataKinetic(), m_manumalList);
+			m_calculateHP->SetDamage(m_enemyAttack->GetDamage());
+		}
+
+		//デリート
+		delete m_enemyAttack;
+		m_enemyAttack = nullptr;
+	}
 }
 
 void BattleScene::SetEnemyAttack(enemyAttackType _enemyAttackType, const Math::Vector2& _pos)
@@ -352,4 +293,186 @@ void BattleScene::SetEnemyAttack(enemyAttackType _enemyAttackType, const Math::V
 	}
 
 	m_effectList[m_effectList.size() - 1]->Init(_pos, m_enemyAttack->GetRange());
+}
+
+void BattleScene::ShotCircleProcess()
+{
+	//次のマニュマルを打ち出す
+	m_nowMoveManumalNum++;
+	if (m_nowMoveManumalNum >= m_nowMoveManumalNumMax)
+	{
+		m_nowMoveManumalNum = 0;
+	}
+
+	//円のエフェクトの処理を行う
+	m_manumalAttackCircle->Init();
+	m_manumalAttackCircle->Update(m_manumalList[m_nowMoveManumalNum]->GetManumalData());
+}
+
+void BattleScene::ManumalMutualCollisionProcess()
+{
+	//動いているマニュマルと止まっているマニュマルの当たり判定
+	for (auto iter = m_manumalList.begin(); iter != m_manumalList.end(); ++iter)
+	{
+		//同一のマニュマルの場合は除外する
+		if (m_manumalList[m_nowMoveManumalNum] == *iter)continue;
+
+		//当たり判定
+		m_manumalMutualCollision->Update(m_manumalList[m_nowMoveManumalNum]->GetManumalData(), (*iter)->GetManumalDataKinetic());
+
+		//当たっていなれば除く
+		if (!m_manumalMutualCollision->GetHitManumalMutualFlg())continue;
+
+		//当たっていた時の処理
+		HitedManumalMutualCollisionProcess(iter);
+	}
+
+	//止まっているマニュマル同士の当たり判定
+	for (auto iter = m_manumalList.begin(); iter != m_manumalList.end(); ++iter)
+	{
+		for (auto iter2 = m_manumalList.begin(); iter2 != m_manumalList.end(); ++iter2)
+		{
+			//動いているマニュマルは除く
+			if (m_manumalList[m_nowMoveManumalNum] == *iter)continue;
+
+			//動いているマニュマルは除く
+			if (m_manumalList[m_nowMoveManumalNum] == *iter2)continue;
+
+			//同一のマニュマルの場合は除外する
+			if (iter == iter2)continue;
+
+			//当たり判定
+			m_manumalMutualCollision->Update((*iter)->GetManumalDataKinetic(), (*iter2)->GetManumalDataKinetic());
+
+			//当たっていなければ除く
+			if (!m_manumalMutualCollision->GetHitManumalMutualFlg())continue;
+
+			//当たっていた時の処理
+			(*iter)->CalculateMoveVec();
+			(*iter2)->CalculateMoveVec();
+
+		}
+	}
+}
+
+void BattleScene::HitedManumalMutualCollisionProcess(std::vector<ManumalBase*>::iterator _iter)
+{
+	//友情コンボの処理
+	//すでに友情コンボを発動していたらリターン
+	if ((*_iter)->GetManumalData().friendFinishFlg)return;
+
+	//友情コンボフラグをたてる
+	(*_iter)->GetManumalDataKinetic().friendFinishFlg = true;
+
+	//友情コンボをセットする
+	SetFriendshipCombo((*_iter)->GetManumalData().frendshipType, (*_iter)->GetManumalData().pos);
+	if (m_frendshipCombo != nullptr)
+	{
+		//友情コンボの処理
+		m_frendshipCombo->Update((*_iter)->GetManumalDataKinetic(), m_enemyList);
+	}
+
+	//ベクトルの計算
+	std::for_each(m_manumalList.begin(), m_manumalList.end(),
+		std::mem_fun(&ManumalBase::CalculateMoveVec));
+
+	//デリート
+	delete m_frendshipCombo;
+	m_frendshipCombo = nullptr;
+}
+
+void BattleScene::SetFriendshipCombo(frendshipComboType _frendshipComboType, const Math::Vector2& _pos)
+{
+	switch (_frendshipComboType)
+	{
+	case frendshipComboType::BEAM:
+		m_enemyAttack = nullptr;
+		break;
+
+	case frendshipComboType::EXPLOSION:
+		m_frendshipCombo = new FriendExplosion;
+		m_effectList.push_back(new ExplosionEffect);
+		break;
+
+	default:
+		m_enemyAttack = nullptr;
+		assert(!"敵の攻撃タイプに不正な値");
+		break;
+	}
+
+	m_effectList[m_effectList.size() - 1]->Init(_pos, m_frendshipCombo->GetRange());
+}
+
+void BattleScene::ManumalEnemyCollisonProcess()
+{
+	for (auto iter = m_manumalList.begin(); iter != m_manumalList.end(); ++iter)
+	{
+		for (auto iterE = m_enemyList.begin(); iterE != m_enemyList.end(); ++iterE)
+		{
+			//敵が死んでいたら除く
+			if (!(*iterE)->GetAliveFlg())continue;
+
+			//マニュマルと敵の当たり判定
+			m_manumalEnemyCollison->Update((*iter)->GetManumalDataKinetic(), (*iterE)->GetEnemyData());
+
+			//当たっていなければ除く
+			if (!m_manumalEnemyCollison->GetHitManumalEnemyFlg())continue;
+
+			//行列の計算
+			(*iter)->CalculateMoveVec();
+
+			//当たったマニュマルが動いていないなら除外
+			if (m_manumalList[m_nowMoveManumalNum] != *iter)continue;
+
+			//当たったマニュマルが動いていたらダメージの処理
+			(*iterE)->SetDamage((int)(*iter)->GetManumalData().attack);
+		}
+	}
+}
+
+void BattleScene::HitManumalReflectorProcessBattleScene()
+{
+	for (auto iter = m_manumalList.begin(); iter != m_manumalList.end(); ++iter)
+	{
+		//反射板で跳ね返る処理
+		m_hitManumalReflectorProcess->Update((*iter)->GetManumalDataKinetic(), m_reflectorProcess);
+
+		//反射板に当たっていなかったら除外
+		if (!m_hitManumalReflectorProcess->GetHitReflectorFlg())continue;
+
+		//反射板に当たっているときの処理
+		(*iter)->CalculateMoveVec();
+	}
+}
+
+void BattleScene::HitManumalwallProcessBattleScene()
+{
+	for (auto iter = m_manumalList.begin(); iter != m_manumalList.end(); ++iter)
+	{
+		//壁で跳ね返る処理
+		m_hitManumalwallProcess->Update((*iter)->GetManumalDataKinetic());
+
+		//壁に当たっていなかったら除外
+		if (!m_hitManumalwallProcess->GetHitWallFlg())continue;
+
+		//壁に当たっているときの処理
+		(*iter)->CalculateMoveVec();
+	}
+}
+
+void BattleScene::EffectProcess()
+{
+	//エフェクトのアップデート
+	std::for_each(m_effectList.begin(), m_effectList.end(),
+		std::mem_fun(&EffectBase::Update));
+
+	for (UINT i = 0; i < m_effectList.size(); i++)
+	{
+		//エフェクトが終わってなかったら除外
+		if (!m_effectList[i]->GetEffectFinishFlg())continue;
+
+		//エフェクトを消す処理
+		delete m_effectList[i];
+		m_effectList = UNIQUELIBRARY.DeleteList(i, m_effectList);
+	}
 }
